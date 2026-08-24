@@ -15,14 +15,6 @@ from .surtax import parse_surtax
 
 log = logging.getLogger(__name__)
 
-# pandas 3.0 defaults to a "string" dtype whose missing marker is float NaN, not
-# None, and this applies even to columns written as plain dtype=object: the
-# marker is decided when the parquet file is *read*, not when it was written.
-# This pipeline stores optional scalar text fields (country.fta,
-# tariff_line.surtax_source) that must read back as literal None, so restore
-# the classic object-dtype null behavior for the whole process.
-pd.set_option("future.infer_string", False)
-
 
 def assemble(layout: Layout) -> None:
     st = layout.staging()
