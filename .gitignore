@@ -1,0 +1,37 @@
+# agent artifacts (never commit)
+.superpowers/
+.claude/
+CLAUDE.md
+**/settings.local.json
+**/scheduled_tasks.lock
+.apache-steward/
+docs/superpowers/
+
+# data
+data/raw/
+data/staging/
+*.parquet
+*.duckdb
+
+# python
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+
+# node
+node_modules/
+.next/
+out/
+.vercel/
+
+# env
+.env
+.env.*
+!.env.example
+
+# os / editors
+.DS_Store
+.idea/
+.vscode/
