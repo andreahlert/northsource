@@ -8,7 +8,9 @@ from dataclasses import dataclass
 from pathlib import Path
 
 # pipeline/src/northsource_pipeline/paths.py -> repo root is parents[3]
-DEFAULT_ROOT = Path(os.environ.get("NORTHSOURCE_DATA_DIR", Path(__file__).resolve().parents[3] / "data"))
+DEFAULT_ROOT = Path(
+    os.environ.get("NORTHSOURCE_DATA_DIR", Path(__file__).resolve().parents[3] / "data")
+)
 
 _PERIOD_RE = re.compile(r"(\d{4})-(\d{2})")
 

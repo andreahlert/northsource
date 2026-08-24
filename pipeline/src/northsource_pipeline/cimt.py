@@ -44,12 +44,14 @@ def parse_hs6_desc(text: str) -> pd.DataFrame:
         if len(line) < 112 or line[18:24] != ACTIVE:
             continue
         code = line[0:6]
-        rows.append({
-            "hs6": code,
-            "desc_en": line[29:112].strip(),
-            "desc_fr": line[112:195].strip(),
-            "chapter": code[:2],
-        })
+        rows.append(
+            {
+                "hs6": code,
+                "desc_en": line[29:112].strip(),
+                "desc_fr": line[112:195].strip(),
+                "chapter": code[:2],
+            }
+        )
     df = pd.DataFrame(rows, columns=["hs6", "desc_en", "desc_fr", "chapter"])
     return df.drop_duplicates("hs6", keep="last").sort_values("hs6").reset_index(drop=True)
 
@@ -61,12 +63,14 @@ def parse_cty_desc(text: str) -> pd.DataFrame:
         if not m or m.group(4) != ACTIVE:
             continue
         code = m.group(1)
-        rows.append({
-            "cimt_code": code,
-            "iso": cimt_to_iso3(code),
-            "name_en": m.group(5).strip(),
-            "name_fr": m.group(6).strip(),
-        })
+        rows.append(
+            {
+                "cimt_code": code,
+                "iso": cimt_to_iso3(code),
+                "name_en": m.group(5).strip(),
+                "name_fr": m.group(6).strip(),
+            }
+        )
     # dtype=object keeps unmapped codes as Python None instead of pandas 3.0's
     # default string dtype, which would coerce None to NaN.
     df = pd.DataFrame(rows, columns=["cimt_code", "iso", "name_en", "name_fr"], dtype=object)
@@ -121,7 +125,10 @@ def monthly_totals(hs6_csvs: list[Path], hs2_csvs: list[Path]) -> pd.DataFrame:
 
 
 def parse_cimt(layout: Layout) -> None:
-    folders = [year_folder(layout, layout.period.previous_year), year_folder(layout, layout.period.year)]
+    folders = [
+        year_folder(layout, layout.period.previous_year),
+        year_folder(layout, layout.period.year),
+    ]
     folders = [f for f in folders if f.exists()]
     if not folders:
         raise FileNotFoundError("no CIMT year folder found, run fetch first")
@@ -140,7 +147,9 @@ def parse_cimt(layout: Layout) -> None:
     imports["partner_iso"] = imports["cimt_code"].map(cimt_to_iso3)
     dropped = imports["partner_iso"].isna().sum()
     log.info("ca_import: %d rows, %d dropped (no ISO3)", len(imports), dropped)
-    ca_import = imports.dropna(subset=["partner_iso"])[["hs6", "partner_iso", "year", "month", "value_cad"]]
+    ca_import = imports.dropna(subset=["partner_iso"])[
+        ["hs6", "partner_iso", "year", "month", "value_cad"]
+    ]
     ca_import.to_parquet(st / "ca_import.parquet", index=False)
 
     monthly_totals(hs6_csvs, hs2_csvs).to_parquet(st / "cimt_totals.parquet", index=False)

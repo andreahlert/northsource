@@ -8,11 +8,13 @@ from tests.conftest import cty_desc_line, hs6_desc_line
 
 
 def test_parse_hs6_desc_keeps_active_only_and_latest_text():
-    text = "\r\n".join([
-        hs6_desc_line("040610", "198801", "199112", "KGM", "Cheese old", "Fromage vieux"),
-        hs6_desc_line("040610", "199201", "999912", "KGM", "Cheese, fresh", "Fromage, frais"),
-        hs6_desc_line("010111", "198801", "200112", "NMB", "Horses, dead code", "Chevaux"),
-    ])
+    text = "\r\n".join(
+        [
+            hs6_desc_line("040610", "198801", "199112", "KGM", "Cheese old", "Fromage vieux"),
+            hs6_desc_line("040610", "199201", "999912", "KGM", "Cheese, fresh", "Fromage, frais"),
+            hs6_desc_line("010111", "198801", "200112", "NMB", "Horses, dead code", "Chevaux"),
+        ]
+    )
     df = cimt.parse_hs6_desc(text)
     assert df.to_dict("records") == [
         {"hs6": "040610", "desc_en": "Cheese, fresh", "desc_fr": "Fromage, frais", "chapter": "04"}
@@ -20,17 +22,26 @@ def test_parse_hs6_desc_keeps_active_only_and_latest_text():
 
 
 def test_parse_cty_desc_maps_iso3_and_keeps_unmappable_with_none():
-    text = "\r\n".join([
-        cty_desc_line("DE", "155", "197001", "199009", "West Germany", "Allemagne de l'Ouest"),
-        cty_desc_line("DE", "155", "199010", "999912", "Germany", "Allemagne"),
-        cty_desc_line("XK", "273", "201701", "999912", "Kosovo", "Kosovo"),
-        cty_desc_line("ZX", "005", "198801", "999912", "Unknown or unspecified", "Inconnu ou non-precisé"),
-    ])
+    text = "\r\n".join(
+        [
+            cty_desc_line("DE", "155", "197001", "199009", "West Germany", "Allemagne de l'Ouest"),
+            cty_desc_line("DE", "155", "199010", "999912", "Germany", "Allemagne"),
+            cty_desc_line("XK", "273", "201701", "999912", "Kosovo", "Kosovo"),
+            cty_desc_line(
+                "ZX", "005", "198801", "999912", "Unknown or unspecified", "Inconnu ou non-precisé"
+            ),
+        ]
+    )
     df = cimt.parse_cty_desc(text)
     assert df.to_dict("records") == [
         {"cimt_code": "DE", "iso": "DEU", "name_en": "Germany", "name_fr": "Allemagne"},
         {"cimt_code": "XK", "iso": "XKX", "name_en": "Kosovo", "name_fr": "Kosovo"},
-        {"cimt_code": "ZX", "iso": None, "name_en": "Unknown or unspecified", "name_fr": "Inconnu ou non-precisé"},
+        {
+            "cimt_code": "ZX",
+            "iso": None,
+            "name_en": "Unknown or unspecified",
+            "name_fr": "Inconnu ou non-precisé",
+        },
     ]
 
 
@@ -52,7 +63,21 @@ def test_monthly_totals_match(layout: Layout):
     df = cimt.monthly_totals(hs6, hs2)
     assert len(df) == 12
     assert (df.hs6_total == df.hs2_total).all()
-    assert df.hs6_total.iloc[0] == 3_000_000 + 900_000 + 400_000 + 1_500_000 + 10_000 + 5_000_000 + 700_000 + 2_000_000 + 4_000_000 + 8_000_000 + 6_000_000 + 3_000_000
+    assert (
+        df.hs6_total.iloc[0]
+        == 3_000_000
+        + 900_000
+        + 400_000
+        + 1_500_000
+        + 10_000
+        + 5_000_000
+        + 700_000
+        + 2_000_000
+        + 4_000_000
+        + 8_000_000
+        + 6_000_000
+        + 3_000_000
+    )
 
 
 def test_parse_cimt_writes_staging(layout: Layout):

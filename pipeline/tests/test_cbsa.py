@@ -51,7 +51,14 @@ def test_parse_cbsa_writes_staging(layout: Layout):
     cbsa.parse_cbsa(layout)
     st = layout.staging()
     tl = pd.read_parquet(st / "tariff_line_raw.parquet")
-    assert sorted(tl.hs8) == ["04061010", "04061090", "72061000", "84713000", "87032200", "98011010"]
+    assert sorted(tl.hs8) == [
+        "04061010",
+        "04061090",
+        "72061000",
+        "84713000",
+        "87032200",
+        "98011010",
+    ]
     cc = pd.read_parquet(st / "cbsa_country.parquet")
     assert len(cc) == 8
     assert list(cc.columns) == ["name", "treatments", "iso"]
@@ -75,5 +82,11 @@ def test_fetch_cbsa_requests_all_pages(layout: Layout, monkeypatch, tmp_path):
     fresh = Layout(tmp_path / "fresh", layout.period)
     cbsa.fetch_cbsa(fresh, tariff_year=2026)
     assert len(urls) == 100
-    assert urls[0] == "https://www.cbsa-asfc.gc.ca/trade-commerce/tariff-tarif/2026/html/00/ch01-eng.html"
-    assert urls[-1] == "https://www.cbsa-asfc.gc.ca/trade-commerce/tariff-tarif/2026/html/countries-pays-eng.html"
+    assert (
+        urls[0]
+        == "https://www.cbsa-asfc.gc.ca/trade-commerce/tariff-tarif/2026/html/00/ch01-eng.html"
+    )
+    assert (
+        urls[-1]
+        == "https://www.cbsa-asfc.gc.ca/trade-commerce/tariff-tarif/2026/html/countries-pays-eng.html"
+    )

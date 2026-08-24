@@ -15,8 +15,12 @@ from .rates import parse_pref, parse_rate, pref_to_json
 
 log = logging.getLogger(__name__)
 
-CHAPTER_URL = "https://www.cbsa-asfc.gc.ca/trade-commerce/tariff-tarif/{year}/html/00/ch{nn:02d}-eng.html"
-COUNTRIES_URL = "https://www.cbsa-asfc.gc.ca/trade-commerce/tariff-tarif/{year}/html/countries-pays-eng.html"
+CHAPTER_URL = (
+    "https://www.cbsa-asfc.gc.ca/trade-commerce/tariff-tarif/{year}/html/00/ch{nn:02d}-eng.html"
+)
+COUNTRIES_URL = (
+    "https://www.cbsa-asfc.gc.ca/trade-commerce/tariff-tarif/{year}/html/countries-pays-eng.html"
+)
 _HS8_RE = re.compile(r"\d{4}\.\d{2}\.\d{2}")
 _TARIFF_COLUMNS = ["hs8", "hs6", "mfn_text", "mfn_pct", "pref"]
 
@@ -48,13 +52,15 @@ def parse_chapter(html: str) -> pd.DataFrame:
             continue
         hs8 = cells[0].replace(".", "")
         mfn = parse_rate(cells[4])
-        rows.append({
-            "hs8": hs8,
-            "hs6": hs8[:6],
-            "mfn_text": mfn.text,
-            "mfn_pct": mfn.pct,
-            "pref": pref_to_json(parse_pref(cells[5])),
-        })
+        rows.append(
+            {
+                "hs8": hs8,
+                "hs6": hs8[:6],
+                "mfn_text": mfn.text,
+                "mfn_pct": mfn.pct,
+                "pref": pref_to_json(parse_pref(cells[5])),
+            }
+        )
     df = pd.DataFrame(rows, columns=_TARIFF_COLUMNS)
     df["mfn_pct"] = df["mfn_pct"].astype("float64")
     return df
@@ -86,7 +92,9 @@ def parse_cbsa(layout: Layout) -> None:
             log.warning("missing chapter page %s", page.name)
             continue
         frames.append(parse_chapter(page.read_text(encoding="utf-8")))
-    tariff = pd.concat(frames, ignore_index=True) if frames else pd.DataFrame(columns=_TARIFF_COLUMNS)
+    tariff = (
+        pd.concat(frames, ignore_index=True) if frames else pd.DataFrame(columns=_TARIFF_COLUMNS)
+    )
     tariff = tariff.drop_duplicates("hs8").sort_values("hs8").reset_index(drop=True)
     tariff.to_parquet(st / "tariff_line_raw.parquet", index=False)
     log.info("tariff_line_raw: %d HS8 lines", len(tariff))

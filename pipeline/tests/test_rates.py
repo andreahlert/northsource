@@ -11,7 +11,10 @@ from northsource_pipeline.rates import Rate, parse_pref, parse_rate, pref_from_j
         ("6%", Rate("6%", 6.0)),
         ("3.32¢/kg", Rate("3.32¢/kg", None)),
         ("270% but not less than $3.15/kg", Rate("270% but not less than $3.15/kg", None)),
-        ("12.28¢/litre of absolute ethyl alcohol", Rate("12.28¢/litre of absolute ethyl alcohol", None)),
+        (
+            "12.28¢/litre of absolute ethyl alcohol",
+            Rate("12.28¢/litre of absolute ethyl alcohol", None),
+        ),
         ("  Free \n", Rate("Free", 0.0)),
         ("", Rate("", None)),
     ],

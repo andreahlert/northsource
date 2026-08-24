@@ -8,8 +8,29 @@ from dataclasses import dataclass
 
 TREATMENT_CODES: frozenset[str] = frozenset(
     {
-        "AUT", "CCCT", "CEUT", "CIAT", "COLT", "CPTPT", "CRT", "CT", "GPT", "HNT", "IT", "JT",
-        "KRT", "LDCT", "MXT", "NT", "NZT", "PAT", "PT", "SLT", "UAT", "UKT", "UST",
+        "AUT",
+        "CCCT",
+        "CEUT",
+        "CIAT",
+        "COLT",
+        "CPTPT",
+        "CRT",
+        "CT",
+        "GPT",
+        "HNT",
+        "IT",
+        "JT",
+        "KRT",
+        "LDCT",
+        "MXT",
+        "NT",
+        "NZT",
+        "PAT",
+        "PT",
+        "SLT",
+        "UAT",
+        "UKT",
+        "UST",
     }
 )
 
@@ -58,7 +79,9 @@ def parse_pref(text: str) -> dict[str, Rate]:
 
 
 def pref_to_json(pref: dict[str, Rate]) -> str:
-    return json.dumps({k: {"text": v.text, "pct": v.pct} for k, v in pref.items()}, ensure_ascii=False)
+    return json.dumps(
+        {k: {"text": v.text, "pct": v.pct} for k, v in pref.items()}, ensure_ascii=False
+    )
 
 
 def pref_from_json(text: str) -> dict[str, Rate]:
