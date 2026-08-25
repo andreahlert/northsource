@@ -8,9 +8,18 @@ import type {
   SearchResponse,
 } from "./types";
 
+const FALLBACK_API_URL = "http://localhost:8000";
+
+function withFallbackWarning(name: string): string {
+  if (process.env.NODE_ENV === "production") {
+    console.warn(`northsource: ${name} unset, falling back to ${FALLBACK_API_URL}`);
+  }
+  return FALLBACK_API_URL;
+}
+
 export const API_URL =
-  process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
-export const PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
+  process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? withFallbackWarning("API_URL");
+export const PUBLIC_API_URL = process.env.NEXT_PUBLIC_API_URL ?? withFallbackWarning("NEXT_PUBLIC_API_URL");
 
 const DAILY = { next: { revalidate: 86400 } } as const;
 
@@ -19,9 +28,13 @@ async function get(path: string): Promise<Response> {
 }
 
 export async function search(q: string, lang: Lang): Promise<SearchResponse> {
-  const r = await fetch(`${PUBLIC_API_URL}/search?q=${encodeURIComponent(q)}&lang=${lang}`);
-  if (!r.ok) return { query: q, lang, results: [] };
-  return r.json();
+  try {
+    const r = await fetch(`${PUBLIC_API_URL}/search?q=${encodeURIComponent(q)}&lang=${lang}`);
+    if (!r.ok) return { query: q, lang, results: [] };
+    return await r.json();
+  } catch {
+    return { query: q, lang, results: [] };
+  }
 }
 
 export type HsResult = { ok: true; data: HsResponse } | { ok: false; notFound: HsNotFound };
@@ -44,7 +57,8 @@ export async function getMeta(): Promise<MetaResponse | null> {
   try {
     const r = await get("/meta");
     return r.ok ? r.json() : null;
-  } catch {
+  } catch (e) {
+    console.error("northsource: /meta failed", e);
     return null;
   }
 }
@@ -53,7 +67,8 @@ export async function getFeatured(): Promise<FeaturedItem[]> {
   try {
     const r = await get("/featured");
     return r.ok ? (await r.json()).items : [];
-  } catch {
+  } catch (e) {
+    console.error("northsource: /featured failed", e);
     return [];
   }
 }
@@ -62,7 +77,8 @@ export async function getSitemap(): Promise<string[]> {
   try {
     const r = await get("/sitemap");
     return r.ok ? (await r.json()).hs6 : [];
-  } catch {
+  } catch (e) {
+    console.error("northsource: /sitemap failed", e);
     return [];
   }
 }

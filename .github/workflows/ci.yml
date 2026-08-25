@@ -59,7 +59,15 @@ jobs:
       - run: npm run e2e
         env:
           CI: "1"
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: web-playwright-report
+          path: |
+            web/playwright-report/
+            web/test-results/
       - run: npm run build
         env:
           API_URL: http://localhost:8001
           NEXT_PUBLIC_API_URL: http://localhost:8001
+          NEXT_PUBLIC_SITE_URL: http://localhost:3000

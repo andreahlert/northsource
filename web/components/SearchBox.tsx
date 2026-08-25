@@ -26,10 +26,11 @@ export default function SearchBox() {
     const id = ++seq.current;
     const timer = setTimeout(async () => {
       setBusy(true);
-      const r = await search(term, lang);
-      if (id === seq.current) {
-        setResults(r.results);
-        setBusy(false);
+      try {
+        const r = await search(term, lang);
+        if (id === seq.current) setResults(r.results);
+      } finally {
+        if (id === seq.current) setBusy(false);
       }
     }, 250);
     return () => clearTimeout(timer);
@@ -49,6 +50,7 @@ export default function SearchBox() {
         value={q}
         onChange={(e) => setQ(e.target.value)}
         placeholder={t("placeholder")}
+        aria-label={t("placeholder")}
         autoComplete="off"
         className="w-full rounded-lg border border-neutral-300 px-4 py-3 text-lg shadow-sm focus:border-neutral-900 focus:outline-none"
         data-testid="search-input"

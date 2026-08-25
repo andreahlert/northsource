@@ -14,6 +14,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const locale = await getLocale();
   const messages = await getMessages();
   return (
+    // Locale comes from the NEXT_LOCALE cookie; these pages must never be cached without Vary: Cookie.
     <html lang={locale}>
       <body className="min-h-screen flex flex-col">
         <NextIntlClientProvider locale={locale} messages={messages}>
