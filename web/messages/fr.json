@@ -1,0 +1,65 @@
+{
+  "app": { "name": "northsource", "tagline": "Des fournisseurs hors États-Unis pour ce que le Canada importe" },
+  "nav": { "home": "Accueil", "github": "GitHub" },
+  "home": {
+    "title": "Trouvez des fournisseurs hors États-Unis pour ce que vous importez",
+    "subtitle": "Cherchez un produit ou un code SH. Voyez quels pays l'exportent, leur tarif à l'entrée au Canada et s'ils y expédient déjà.",
+    "placeholder": "Qu'importez-vous des États-Unis? ex. fromage, bobines d'acier, 8471",
+    "featured": "Produits visés par la surtaxe de 25 %",
+    "how1": "Cherchez par nom de produit ou code SH",
+    "how2": "Comparez les pays par volume et tarif à l'entrée au Canada",
+    "how3": "Accédez aux répertoires de fournisseurs filtrés pour ce produit"
+  },
+  "search": { "noResults": "Aucun code SH correspondant", "searching": "Recherche" },
+  "result": {
+    "chapter": "Chapitre {chapter}",
+    "mfn": "Taux NPF",
+    "surtax": "Surtaxe de {pct} % sur les marchandises d'origine américaine non admissibles à l'ACEUM",
+    "surtaxSource": "Source : {source}",
+    "worldOnly": "Aucune donnée d'importation canadienne pour ce code au cours des 12 derniers mois. Le classement repose uniquement sur les exportations mondiales.",
+    "window": "Importations canadiennes : {from} à {to}",
+    "notFoundTitle": "Code SH {hs6} introuvable",
+    "notFoundHint": "Vouliez-vous dire :"
+  },
+  "table": {
+    "rank": "#",
+    "country": "Pays",
+    "score": "Score",
+    "imports": "Importations CA, 12 mois",
+    "exports": "Exportations mondiales",
+    "applied": "Taux appliqué",
+    "mfn": "NPF",
+    "fta": "ALE",
+    "action": "",
+    "find": "Trouver des fournisseurs",
+    "currentSource": "source actuelle",
+    "ftaOnly": "ALE seulement",
+    "suppliesOnly": "Fournit déjà le Canada",
+    "none": "Aucune alternative ne correspond à ces filtres",
+    "noData": "aucune donnée"
+  },
+  "country": {
+    "imports": "Importations canadiennes depuis {name}, 24 derniers mois (CAD)",
+    "noImports": "Aucune importation canadienne enregistrée au cours des 24 derniers mois",
+    "worldExport": "Exportations mondiales {year}",
+    "tariff": "Tarif à l'entrée au Canada",
+    "treatment": "Traitement",
+    "applied": "Taux appliqué",
+    "mfn": "Taux NPF",
+    "fta": "Accord",
+    "score": "Score",
+    "reasons": "Pourquoi ce score",
+    "links": "Trouver des fournisseurs : {name}",
+    "notice": "Les liens ouvrent des répertoires tiers. northsource ne vérifie pas les fournisseurs.",
+    "tcs": "Service des délégués commerciaux",
+    "kompass": "Kompass",
+    "cti": "Canadian Trade Index",
+    "frasers": "Frasers",
+    "back": "Retour à {hs6}"
+  },
+  "footer": {
+    "data": "Données : CICM StatCan {cimt}, tarif ASFC {cbsa}, UN Comtrade {comtrade}",
+    "noData": "Aucune donnée chargée",
+    "license": "Données ouvertes, licence MIT"
+  }
+}

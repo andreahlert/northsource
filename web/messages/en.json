@@ -1,0 +1,65 @@
+{
+  "app": { "name": "northsource", "tagline": "Non-US suppliers for what Canada imports" },
+  "nav": { "home": "Home", "github": "GitHub" },
+  "home": {
+    "title": "Find non-US suppliers for what you import",
+    "subtitle": "Search a product or an HS code. See which countries export it, their tariff into Canada, and whether they already ship here.",
+    "placeholder": "What do you import from the US? e.g. cheese, steel coils, 8471",
+    "featured": "Products hit by the 25% surtax",
+    "how1": "Search by product name or HS code",
+    "how2": "Compare countries by volume and tariff into Canada",
+    "how3": "Jump to supplier directories filtered for that product"
+  },
+  "search": { "noResults": "No matching HS codes", "searching": "Searching" },
+  "result": {
+    "chapter": "Chapter {chapter}",
+    "mfn": "MFN rate",
+    "surtax": "{pct}% surtax on US-origin goods that do not qualify under CUSMA",
+    "surtaxSource": "Source: {source}",
+    "worldOnly": "No Canadian import data for this code in the last 12 months. Ranking uses world export data only.",
+    "window": "Canadian imports: {from} to {to}",
+    "notFoundTitle": "HS code {hs6} not found",
+    "notFoundHint": "Did you mean:"
+  },
+  "table": {
+    "rank": "#",
+    "country": "Country",
+    "score": "Score",
+    "imports": "CA imports, 12 months",
+    "exports": "World exports",
+    "applied": "Applied rate",
+    "mfn": "MFN",
+    "fta": "FTA",
+    "action": "",
+    "find": "Find suppliers",
+    "currentSource": "current source",
+    "ftaOnly": "FTA only",
+    "suppliesOnly": "Supplies Canada only",
+    "none": "No alternatives match these filters",
+    "noData": "no data"
+  },
+  "country": {
+    "imports": "Canadian imports from {name}, last 24 months (CAD)",
+    "noImports": "No Canadian imports recorded in the last 24 months",
+    "worldExport": "World exports {year}",
+    "tariff": "Tariff into Canada",
+    "treatment": "Treatment",
+    "applied": "Applied rate",
+    "mfn": "MFN rate",
+    "fta": "Agreement",
+    "score": "Score",
+    "reasons": "Why this score",
+    "links": "Find suppliers in {name}",
+    "notice": "Links open third-party directories. northsource does not verify suppliers.",
+    "tcs": "Trade Commissioner Service",
+    "kompass": "Kompass",
+    "cti": "Canadian Trade Index",
+    "frasers": "Frasers",
+    "back": "Back to {hs6}"
+  },
+  "footer": {
+    "data": "Data: StatCan CIMT {cimt}, CBSA tariff {cbsa}, UN Comtrade {comtrade}",
+    "noData": "No data loaded yet",
+    "license": "Open data, MIT licensed"
+  }
+}
