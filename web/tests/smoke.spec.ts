@@ -30,3 +30,22 @@ test("result page pins the US row and filters alternatives", async ({ page }) =>
   await expect(page.getByTestId("find-suppliers").first()).toHaveAttribute("href", "/hs/040610/FRA");
   await expect(page).toHaveTitle("Alternatives to US cheese suppliers for Canada | HS 040610");
 });
+
+test("country page renders chart, tariff card and external links", async ({ page }) => {
+  await page.goto("/hs/040610/FRA");
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("France");
+  await expect(page.getByTestId("import-chart").locator("svg.recharts-surface")).toBeVisible();
+  await expect(page.getByTestId("tariff-card")).toContainText("CEUT");
+  await expect(page.getByTestId("tariff-card")).toContainText("CETA");
+  const links = page.getByTestId("external-link");
+  await expect(links).toHaveCount(4);
+  for (const a of await links.all()) {
+    expect(await a.getAttribute("href")).toMatch(/^https:\/\//);
+    expect(await a.getAttribute("target")).toBe("_blank");
+  }
+  await expect(page.getByText("northsource does not verify suppliers")).toBeVisible();
+  await page.goto("/hs/040610/USA");
+  await expect(page.getByTestId("tariff-card")).toContainText("CUSMA");
+  await page.goto("/hs/040610/ZZZ");
+  await expect(page.getByText("404")).toBeVisible();
+});
