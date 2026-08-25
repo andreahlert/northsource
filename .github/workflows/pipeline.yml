@@ -22,17 +22,20 @@ jobs:
       - uses: astral-sh/setup-uv@v3
         with:
           python-version: "3.12"
-      - run: uv sync --no-dev
+      - run: uv sync --frozen --no-dev
       - name: Resolve period
         id: period
+        env:
+          PERIOD: ${{ inputs.period }}
         run: |
-          if [ -n "${{ github.event.inputs.period }}" ]; then echo "value=${{ github.event.inputs.period }}" >> "$GITHUB_OUTPUT";
+          if [ -n "$PERIOD" ]; then echo "value=$PERIOD" >> "$GITHUB_OUTPUT";
           else echo "value=$(date -u +%Y-%m)" >> "$GITHUB_OUTPUT"; fi
       - name: Run pipeline
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           COMTRADE_KEY: ${{ secrets.COMTRADE_KEY }}
-        run: uv run northsource-pipeline run --period "${{ steps.period.outputs.value }}"
+          PERIOD: ${{ steps.period.outputs.value }}
+        run: uv run northsource-pipeline run --period "$PERIOD"
       - name: Upload staging parquet
         if: always()
         uses: actions/upload-artifact@v4

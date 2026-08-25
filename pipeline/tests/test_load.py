@@ -1,3 +1,5 @@
+import os
+
 import pandas as pd
 import psycopg
 import pytest
@@ -11,11 +13,14 @@ from testcontainers.postgres import PostgresContainer
 
 @pytest.fixture(scope="module")
 def database_url():
+    require_docker = bool(os.environ.get("REQUIRE_DOCKER"))
     try:
         with PostgresContainer("postgres:16-alpine") as pg:
             url = pg.get_connection_url().replace("postgresql+psycopg2://", "postgresql://")
             yield url
-    except Exception as exc:  # noqa: BLE001 - docker/testcontainers unavailable, skip cleanly
+    except Exception as exc:
+        if require_docker:
+            raise
         pytest.skip(f"Docker/testcontainers unavailable: {exc}")
 
 
