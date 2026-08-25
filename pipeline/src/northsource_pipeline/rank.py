@@ -102,6 +102,8 @@ def rank(
     canada_hs6 = set(ca12["hs6"])
 
     we = world_export.rename(columns={"reporter_iso": "iso", "value_usd": "world_export_usd"})
+    if len(we):
+        we = we[we["year"] == we["year"].max()]
     we = we[["hs6", "iso", "world_export_usd"]]
     top10: set[tuple[str, str]] = set()
     for hs6, g in we.groupby("hs6"):

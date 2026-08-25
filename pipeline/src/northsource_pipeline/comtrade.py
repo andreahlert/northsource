@@ -112,6 +112,9 @@ def parse_comtrade(layout: Layout) -> None:
                 }
             )
     df = pd.DataFrame(rows, columns=["hs6", "reporter_iso", "year", "value_usd"])
-    df = df.groupby(["hs6", "reporter_iso", "year"], as_index=False)["value_usd"].sum()
+    # One Comtrade response holds one row per reporter, there is nothing to sum. A keyless
+    # file and a keyed file can cover the same hs6/year after a mid-period key change, so
+    # dedupe instead of summing, otherwise the overlap doubles the value.
+    df = df.drop_duplicates(["hs6", "reporter_iso", "year"], keep="last")
     df.to_parquet(layout.staging() / "world_export_raw.parquet", index=False)
     log.info("world_export_raw: %d rows", len(df))

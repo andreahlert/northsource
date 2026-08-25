@@ -84,3 +84,25 @@ def test_parse_comtrade_filters_non_iso_reporters(layout: Layout):
     assert (
         df[(df.hs6 == "040610") & (df.reporter_iso == "DEU")].value_usd.iloc[0] == 2_400_000_000.0
     )
+
+
+def test_parse_comtrade_dedupes_overlapping_files(layout: Layout):
+    # A keyless file (040610.json) and a keyed file (chapter_04.json) can cover the same
+    # hs6/reporter/year after a mid-period retry with a key. The overlap must not be summed.
+    records = [
+        {
+            "reporterISO": "DEU",
+            "reporterDesc": "Germany",
+            "cmdCode": "040610",
+            "refYear": 2025,
+            "flowCode": "X",
+            "partnerISO": "W00",
+            "primaryValue": 2_400_000_000,
+        }
+    ]
+    (layout.raw("comtrade") / "chapter_04.json").write_text(json.dumps(records), encoding="utf-8")
+    comtrade.parse_comtrade(layout)
+    df = pd.read_parquet(layout.staging() / "world_export_raw.parquet")
+    rows = df[(df.hs6 == "040610") & (df.reporter_iso == "DEU")]
+    assert len(rows) == 1
+    assert rows.value_usd.iloc[0] == 2_400_000_000.0

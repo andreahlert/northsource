@@ -74,6 +74,29 @@ def test_applied_rate(treatments, mfn_text, mfn_pct, pref, expected):
     assert rank.applied_rate(treatments, mfn_text, mfn_pct, pref) == expected
 
 
+def test_rank_keeps_only_latest_world_export_year():
+    hs_code = pd.DataFrame({"hs6": ["040610"]})
+    # An unrelated hs6, outside `known`, keeps ca_import non-empty so window() and the
+    # boolean row filter behave normally; it is filtered out before scoring.
+    ca_import = pd.DataFrame(
+        [{"hs6": "999999", "partner_iso": "USA", "year": 2000, "month": 1, "value_cad": 1}]
+    )
+    world_export = pd.DataFrame(
+        [
+            {"hs6": "040610", "reporter_iso": "FRA", "year": 2024, "value_usd": 100.0},
+            {"hs6": "040610", "reporter_iso": "FRA", "year": 2025, "value_usd": 200.0},
+        ]
+    )
+    tariff_line = pd.DataFrame(
+        [{"hs8": "04061010", "hs6": "040610", "mfn_text": "Free", "mfn_pct": 0.0, "pref": "{}"}]
+    )
+    country = pd.DataFrame([{"iso": "FRA", "treatments": []}])
+    df = rank.rank(hs_code, ca_import, world_export, tariff_line, country)
+    fra = df[(df.hs6 == "040610") & (df.iso == "FRA")]
+    assert len(fra) == 1
+    assert fra.world_export_usd.iloc[0] == 200.0
+
+
 @pytest.fixture
 def ranked(layout: Layout) -> pd.DataFrame:
     stages.run_parse(layout)
