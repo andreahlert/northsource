@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import warnings
 from pathlib import Path
 
 import docker.errors
@@ -12,6 +13,16 @@ from psycopg.types.json import Jsonb
 
 pytest.importorskip("testcontainers.postgres")
 from testcontainers.postgres import PostgresContainer
+
+# Importing the test client here, once, with warnings suppressed: this repo's installed
+# starlette prefers a not-yet-adopted "httpx2" package and otherwise emits a one-time
+# deprecation warning on first import of starlette.testclient when only httpx is present.
+# Import caching means later `from fastapi.testclient import TestClient` calls in the
+# `client` fixture are then a plain module lookup and raise nothing, so `-W error` stays
+# meaningful for actual application warnings.
+with warnings.catch_warnings():
+    warnings.simplefilter("ignore")
+    from fastapi.testclient import TestClient as _TestClient  # noqa: F401
 
 SCHEMA = (
     Path(__file__).resolve().parents[2] / "pipeline" / "src" / "northsource_pipeline" / "schema.sql"
@@ -259,9 +270,8 @@ def database_url():
 
 @pytest.fixture(scope="module")
 def app(database_url):
-    from northsource_api.main import create_app
-
     from northsource_api.config import Settings
+    from northsource_api.main import create_app
 
     return create_app(Settings(database_url=database_url, cors_origins="http://localhost:3000"))
 
@@ -270,5 +280,5 @@ def app(database_url):
 def client(app):
     from fastapi.testclient import TestClient
 
-    with TestClient(app) as c:
+    with TestClient(app, raise_server_exceptions=False) as c:
         yield c
