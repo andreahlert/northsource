@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
+import docker.errors
 import psycopg
 import pytest
 from psycopg.types.json import Jsonb
@@ -245,8 +247,10 @@ def database_url():
     try:
         container = PostgresContainer("postgres:16-alpine")
         container.start()
-    except (OSError, RuntimeError) as exc:  # docker missing
-        pytest.skip(f"Docker/testcontainers unavailable: {exc}")
+    except (OSError, RuntimeError, docker.errors.DockerException) as exc:
+        if os.environ.get("REQUIRE_DOCKER"):
+            raise
+        pytest.skip(f"Docker unavailable: {exc}")
     url = container.get_connection_url().replace("postgresql+psycopg2://", "postgresql://")
     seed(url)
     yield url
