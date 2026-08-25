@@ -8,11 +8,19 @@ describe("money", () => {
     expect(fmtCad(0, "en")).toBe("CA$0");
   });
   it("formats CAD in French", () => {
-    expect(fmtCad(36_000_000, "fr")).toMatch(/36\s?M\s?\$/);
+    expect(fmtCad(36_000_000, "fr")).toMatch(/36\s?M\s?CAD/);
   });
   it("formats USD or returns null", () => {
     expect(fmtUsd(1.5e9, "en")).toBe("US$1.5B");
     expect(fmtUsd(null, "en")).toBeNull();
+  });
+  it("preserves a leading minus sign in English", () => {
+    expect(fmtCad(-1_234_567, "en")).toBe("-CA$1.2M");
+  });
+  it("labels CAD and USD with distinct currency codes in French", () => {
+    expect(fmtCad(36_000_000, "fr")).toMatch(/CAD/);
+    expect(fmtUsd(1.5e9, "fr")).toMatch(/USD/);
+    expect(fmtCad(36_000_000, "fr")).not.toBe(fmtUsd(36_000_000, "fr"));
   });
 });
 

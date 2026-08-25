@@ -8,22 +8,31 @@ function compact(n: number, lang: Lang, currency: "CAD" | "USD"): string {
     currency,
     notation: "compact",
     maximumFractionDigits: 1,
-    currencyDisplay: "narrowSymbol",
+    // en keeps the narrow "$" symbol (disambiguated below with an explicit CA$/US$
+    // prefix); fr uses the ISO code so CAD and USD never render as the same "$".
+    currencyDisplay: lang === "en" ? "narrowSymbol" : "code",
   })
     .format(n)
-    .replace(/^\$/, "CA$")
-    .replace(/^US\$/, "US$");
+    .replace(/[\u00a0\u202f]/g, " ");
+}
+
+// Rewrites en-CA's bare "$n" (or "-$n") into an explicit "CA$n" / "US$n",
+// preserving a leading minus sign instead of discarding it.
+function withPrefix(s: string, prefix: string): string {
+  const negative = s.startsWith("-");
+  const rest = s.replace(/^-?\$?/, "");
+  return `${negative ? "-" : ""}${prefix}${rest}`;
 }
 
 export function fmtCad(n: number, lang: Lang): string {
   const s = compact(n, lang, "CAD");
-  return lang === "en" && !s.startsWith("CA$") ? `CA$${s.replace(/^[^\d]*/, "")}` : s;
+  return lang === "en" ? withPrefix(s, "CA$") : s;
 }
 
 export function fmtUsd(n: number | null, lang: Lang): string | null {
   if (n === null || n === undefined) return null;
   const s = compact(n, lang, "USD");
-  return lang === "en" && !s.startsWith("US$") ? `US$${s.replace(/^[^\d]*/, "")}` : s;
+  return lang === "en" ? withPrefix(s, "US$") : s;
 }
 
 export function monthLabel(year: number, month: number, lang: Lang): string {
