@@ -1,17 +1,23 @@
 import pandas as pd
 import pytest
 
-from northsource_pipeline import cli
+from northsource_pipeline import cli, validate
 from northsource_pipeline.paths import Layout
 
 
 def test_parse_validate_rank_via_cli(layout: Layout, monkeypatch):
     root = str(layout.root)
     assert cli.main(["parse", "--period", "2026-08", "--data-dir", root]) == 0
-    # fixture surtax counts are below the real expected ranges: validation must fail with exit 1
+    # fixture surtax counts and row counts are below the real expected ranges/floors:
+    # validation must fail with exit 1
     assert cli.main(["validate", "--period", "2026-08", "--data-dir", root]) == 1
     monkeypatch.setattr(
         cli, "SURTAX_RANGES_OVERRIDE", {"SOR/2025-95": (1, 10), "SOR/2025-118": (1, 10)}
+    )
+    monkeypatch.setattr(
+        validate,
+        "MINIMUMS",
+        {"hs_code": 1, "tariff_line": 1, "ca_import": 1, "country": 1, "world_export": 1},
     )
     assert cli.main(["validate", "--period", "2026-08", "--data-dir", root]) == 0
     assert cli.main(["rank", "--period", "2026-08", "--data-dir", root]) == 0
@@ -58,3 +64,34 @@ def test_fetch_skip_comtrade(layout: Layout, monkeypatch, tmp_path):
 def test_bad_period_is_usage_error():
     with pytest.raises(SystemExit):
         cli.main(["parse", "--period", "2026-8"])
+
+
+def test_explicit_zero_year_args_are_not_replaced_by_period_defaults(monkeypatch, tmp_path):
+    called = []
+    monkeypatch.setattr(cli, "fetch_cimt", lambda l: called.append("cimt") or [])
+    monkeypatch.setattr(
+        cli, "fetch_cbsa", lambda l, tariff_year: called.append(("cbsa", tariff_year))
+    )
+    monkeypatch.setattr(cli, "fetch_surtax", lambda l: called.append("surtax"))
+    monkeypatch.setattr(cli, "active_hs6", lambda l: ["040610"])
+    monkeypatch.setattr(
+        cli, "fetch_comtrade", lambda l, hs6, **kw: called.append(("comtrade", kw["year"]))
+    )
+    assert (
+        cli.main(
+            [
+                "fetch",
+                "--period",
+                "2026-08",
+                "--data-dir",
+                str(tmp_path),
+                "--tariff-year",
+                "0",
+                "--comtrade-year",
+                "0",
+            ]
+        )
+        == 0
+    )
+    assert ("cbsa", 0) in called
+    assert ("comtrade", 0) in called
