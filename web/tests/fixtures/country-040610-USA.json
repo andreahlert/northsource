@@ -5,6 +5,7 @@
   "country": {
     "iso": "USA",
     "name": "United States of America",
+    "name_fr": "États-Unis",
     "treatments": [
       "UST"
     ],

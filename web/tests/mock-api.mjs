@@ -39,7 +39,19 @@ createServer((req, res) => {
       : search.filter((r) => r.desc.toLowerCase().includes(q));
     return send(200, { query: q, lang, results });
   }
-  if (url.pathname in routes) return send(200, routes[url.pathname]);
+  if (url.pathname in routes) {
+    const payload = routes[url.pathname];
+    const lang = url.searchParams.get("lang") === "fr" ? "fr" : "en";
+    // desc_en/desc_fr already ride along in every fixture regardless of lang.
+    // country.name is the one field a real API would localize server-side, so
+    // swap it in for lang=fr and drop the fixture-only name_fr from the wire
+    // shape (matching the real CountryResponse contract of a single "name").
+    if (lang === "fr" && payload.country?.name_fr) {
+      const { name_fr, ...country } = payload.country;
+      return send(200, { ...payload, country: { ...country, name: name_fr } });
+    }
+    return send(200, payload);
+  }
   if (url.pathname.startsWith("/hs/")) {
     const hs6 = url.pathname.split("/")[2];
     if (url.pathname.includes("/country/")) return send(404, { detail: "country not found" });

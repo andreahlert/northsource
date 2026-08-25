@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("home search leads to the HS6 result page", async ({ page }) => {
+test("home search leads to the HS6 result page", async ({ page, context }) => {
   await page.goto("/");
   await expect(page.getByTestId("data-version")).toContainText("2026-06");
   const box = page.getByPlaceholder("What do you import from the US? e.g. cheese, steel coils, 8471");
@@ -10,6 +10,18 @@ test("home search leads to the HS6 result page", async ({ page }) => {
   await first.click();
   await expect(page).toHaveURL(/\/hs\/040610$/);
   await expect(page.getByRole("heading", { level: 1 })).toContainText("040610");
+
+  await page.getByTestId("lang-fr").click();
+  await expect(page.getByTestId("lang-fr")).toHaveAttribute("aria-pressed", "true");
+  await expect(page.locator("html")).toHaveAttribute("lang", "fr");
+
+  await context.addCookies([{ name: "NEXT_LOCALE", value: "fr", url: "http://localhost:3000" }]);
+  await page.goto("/");
+  await page.reload();
+  await expect(page.locator("html")).toHaveAttribute("lang", "fr");
+  await expect(
+    page.getByPlaceholder("Qu'importez-vous des États-Unis? ex. fromage, bobines d'acier, 8471"),
+  ).toBeVisible();
 });
 
 test("result page pins the US row and filters alternatives", async ({ page }) => {
@@ -29,6 +41,13 @@ test("result page pins the US row and filters alternatives", async ({ page }) =>
   await expect(us).toHaveCount(1);
   await expect(page.getByTestId("find-suppliers").first()).toHaveAttribute("href", "/hs/040610/FRA");
   await expect(page).toHaveTitle("Alternatives to US cheese suppliers for Canada | HS 040610");
+
+  await page.goto("/hs/999999");
+  await expect(page.getByTestId("suggestion")).toBeVisible();
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute("content", /noindex/);
+
+  const malformed = await page.goto("/hs/abcdef");
+  expect(malformed?.status()).toBe(404);
 });
 
 test("country page renders chart, tariff card and external links", async ({ page }) => {
@@ -47,5 +66,5 @@ test("country page renders chart, tariff card and external links", async ({ page
   await page.goto("/hs/040610/USA");
   await expect(page.getByTestId("tariff-card")).toContainText("CUSMA");
   await page.goto("/hs/040610/ZZZ");
-  await expect(page.getByText("404")).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1 })).toContainText("Page not found");
 });
