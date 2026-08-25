@@ -1,6 +1,5 @@
 {
   "app": { "name": "northsource", "tagline": "Non-US suppliers for what Canada imports" },
-  "nav": { "home": "Home", "github": "GitHub" },
   "home": {
     "title": "Find non-US suppliers for what you import",
     "subtitle": "Search a product or an HS code. See which countries export it, their tariff into Canada, and whether they already ship here.",
@@ -12,6 +11,7 @@
   },
   "search": { "noResults": "No matching HS codes", "searching": "Searching" },
   "result": {
+    "metaTitle": "Alternatives to US {name} suppliers for Canada | HS {hs6}",
     "chapter": "Chapter {chapter}",
     "mfn": "MFN rate",
     "surtax": "{pct}% surtax on US-origin goods that do not qualify under CUSMA",
@@ -30,7 +30,7 @@
     "applied": "Applied rate",
     "mfn": "MFN",
     "fta": "FTA",
-    "action": "",
+    "action": "Details",
     "find": "Find suppliers",
     "currentSource": "current source",
     "ftaOnly": "FTA only",
@@ -39,6 +39,7 @@
     "noData": "no data"
   },
   "country": {
+    "metaTitle": "{country}: {name} suppliers for Canada | HS {hs6}",
     "imports": "Canadian imports from {name}, last 24 months (CAD)",
     "noImports": "No Canadian imports recorded in the last 24 months",
     "worldExport": "World exports {year}",
@@ -56,6 +57,26 @@
     "cti": "Canadian Trade Index",
     "frasers": "Frasers",
     "back": "Back to {hs6}"
+  },
+  "reasons": {
+    "suppliesCanada": "supplies Canada",
+    "fta0": "FTA 0%",
+    "dutyFree": "duty free",
+    "preferentialRate": "preferential rate",
+    "top10Exporter": "top-10 world exporter"
+  },
+  "error": {
+    "title": "Data temporarily unavailable",
+    "body": "We could not load this page right now. Please try again in a moment.",
+    "retry": "Try again"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "body": "The page you are looking for does not exist or may have moved.",
+    "home": "Back to home"
+  },
+  "chart": {
+    "aria": "Monthly Canadian imports, last 24 months"
   },
   "footer": {
     "data": "Data: StatCan CIMT {cimt}, CBSA tariff {cbsa}, UN Comtrade {comtrade}",

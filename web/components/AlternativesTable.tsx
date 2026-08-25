@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { fmtCad, fmtUsd } from "@/lib/format";
+import { reasonLabel } from "@/lib/reasons";
 import type { Alternative, Lang } from "@/lib/types";
 
 interface Props {
@@ -14,6 +15,7 @@ interface Props {
 
 export default function AlternativesTable({ hs6, alternatives, lang }: Props) {
   const t = useTranslations("table");
+  const tr = useTranslations("reasons");
   const [ftaOnly, setFtaOnly] = useState(false);
   const [suppliesOnly, setSuppliesOnly] = useState(false);
 
@@ -51,15 +53,17 @@ export default function AlternativesTable({ hs6, alternatives, lang }: Props) {
         <table className="w-full text-sm">
           <thead className="bg-neutral-50 text-left text-xs uppercase tracking-wide text-neutral-500">
             <tr>
-              <th className="px-3 py-2">{t("rank")}</th>
-              <th className="px-3 py-2">{t("country")}</th>
-              <th className="px-3 py-2 text-right">{t("score")}</th>
-              <th className="px-3 py-2 text-right">{t("imports")}</th>
-              <th className="px-3 py-2 text-right">{t("exports")}</th>
-              <th className="px-3 py-2">{t("applied")}</th>
-              <th className="px-3 py-2">{t("mfn")}</th>
-              <th className="px-3 py-2">{t("fta")}</th>
-              <th className="px-3 py-2">{t("action")}</th>
+              <th className="px-3 py-2" scope="col">{t("rank")}</th>
+              <th className="px-3 py-2" scope="col">{t("country")}</th>
+              <th className="px-3 py-2 text-right" scope="col">{t("score")}</th>
+              <th className="px-3 py-2 text-right" scope="col">{t("imports")}</th>
+              <th className="px-3 py-2 text-right" scope="col">{t("exports")}</th>
+              <th className="px-3 py-2" scope="col">{t("applied")}</th>
+              <th className="px-3 py-2" scope="col">{t("mfn")}</th>
+              <th className="px-3 py-2" scope="col">{t("fta")}</th>
+              <th className="px-3 py-2" scope="col">
+                <span className="sr-only">{t("action")}</span>
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -94,7 +98,7 @@ export default function AlternativesTable({ hs6, alternatives, lang }: Props) {
               <tr key={a.iso} className="border-t border-neutral-100" data-testid="alt-row">
                 <td className="px-3 py-2 text-neutral-500">{i + 1}</td>
                 <td className="px-3 py-2 font-medium">{a.name}</td>
-                <td className="px-3 py-2 text-right" title={a.score_reasons.join(", ")}>
+                <td className="px-3 py-2 text-right" title={a.score_reasons.map((r) => reasonLabel(r, tr)).join(", ")}>
                   {a.score ?? ""}
                 </td>
                 <td className="px-3 py-2 text-right">{a.already_supplies_canada ? money(a.ca_import_12m_cad) : ""}</td>

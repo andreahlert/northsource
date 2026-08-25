@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import { getLocale, getTranslations } from "next-intl/server";
 import AlternativesTable from "@/components/AlternativesTable";
 import SurtaxBadge from "@/components/SurtaxBadge";
@@ -7,24 +8,25 @@ import { getHs } from "@/lib/api";
 import { desc, periodLabel, shortName } from "@/lib/format";
 import type { Lang } from "@/lib/types";
 
-export const dynamicParams = true;
-
 type Params = Promise<{ hs6: string }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { hs6 } = await params;
+  if (!/^\d{6}$/.test(hs6)) notFound();
   const lang = (await getLocale()) as Lang;
   const r = await getHs(hs6, lang);
   if (!r.ok) return { title: `HS ${hs6} | northsource`, robots: { index: false } };
-  const name = shortName(r.data.desc_en);
+  const t = await getTranslations("result");
+  const name = shortName(desc(r.data, lang));
   return {
-    title: `Alternatives to US ${name} suppliers for Canada | HS ${hs6}`,
-    description: desc(r.data, lang),
+    title: t("metaTitle", { name, hs6 }),
+    description: desc(r.data, lang).slice(0, 160),
   };
 }
 
 export default async function HsPage({ params }: { params: Params }) {
   const { hs6 } = await params;
+  if (!/^\d{6}$/.test(hs6)) notFound();
   const lang = (await getLocale()) as Lang;
   const t = await getTranslations("result");
   const r = await getHs(hs6, lang);

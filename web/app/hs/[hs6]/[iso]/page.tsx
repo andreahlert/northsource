@@ -9,23 +9,28 @@ import { getCountry } from "@/lib/api";
 import { desc, fmtUsd, shortName } from "@/lib/format";
 import type { Lang } from "@/lib/types";
 
-export const dynamicParams = true;
-
 type Params = Promise<{ hs6: string; iso: string }>;
+
+function validParams(hs6: string, iso: string): boolean {
+  return /^\d{6}$/.test(hs6) && /^[A-Za-z]{3}$/.test(iso);
+}
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { hs6, iso } = await params;
+  if (!validParams(hs6, iso)) notFound();
   const lang = (await getLocale()) as Lang;
   const c = await getCountry(hs6, iso.toUpperCase(), lang);
   if (!c) return { title: `HS ${hs6} | northsource`, robots: { index: false } };
+  const t = await getTranslations("country");
   return {
-    title: `${c.country.name}: ${shortName(c.desc_en)} suppliers for Canada | HS ${hs6}`,
-    description: desc(c, lang),
+    title: t("metaTitle", { country: c.country.name, name: shortName(desc(c, lang)), hs6 }),
+    description: desc(c, lang).slice(0, 160),
   };
 }
 
 export default async function CountryPage({ params }: { params: Params }) {
   const { hs6, iso } = await params;
+  if (!validParams(hs6, iso)) notFound();
   const lang = (await getLocale()) as Lang;
   const t = await getTranslations("country");
   const c = await getCountry(hs6, iso.toUpperCase(), lang);

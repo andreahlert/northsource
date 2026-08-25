@@ -1,6 +1,5 @@
 {
   "app": { "name": "northsource", "tagline": "Des fournisseurs hors États-Unis pour ce que le Canada importe" },
-  "nav": { "home": "Accueil", "github": "GitHub" },
   "home": {
     "title": "Trouvez des fournisseurs hors États-Unis pour ce que vous importez",
     "subtitle": "Cherchez un produit ou un code SH. Voyez quels pays l'exportent, leur tarif à l'entrée au Canada et s'ils y expédient déjà.",
@@ -12,6 +11,7 @@
   },
   "search": { "noResults": "Aucun code SH correspondant", "searching": "Recherche" },
   "result": {
+    "metaTitle": "Alternatives aux fournisseurs américains de {name} pour le Canada | SH {hs6}",
     "chapter": "Chapitre {chapter}",
     "mfn": "Taux NPF",
     "surtax": "Surtaxe de {pct} % sur les marchandises d'origine américaine non admissibles à l'ACEUM",
@@ -30,7 +30,7 @@
     "applied": "Taux appliqué",
     "mfn": "NPF",
     "fta": "ALE",
-    "action": "",
+    "action": "Détails",
     "find": "Trouver des fournisseurs",
     "currentSource": "source actuelle",
     "ftaOnly": "ALE seulement",
@@ -39,6 +39,7 @@
     "noData": "aucune donnée"
   },
   "country": {
+    "metaTitle": "{country} : fournisseurs de {name} pour le Canada | SH {hs6}",
     "imports": "Importations canadiennes depuis {name}, 24 derniers mois (CAD)",
     "noImports": "Aucune importation canadienne enregistrée au cours des 24 derniers mois",
     "worldExport": "Exportations mondiales {year}",
@@ -56,6 +57,26 @@
     "cti": "Canadian Trade Index",
     "frasers": "Frasers",
     "back": "Retour à {hs6}"
+  },
+  "reasons": {
+    "suppliesCanada": "Fournit déjà le Canada",
+    "fta0": "ALE 0 %",
+    "dutyFree": "En franchise de droits",
+    "preferentialRate": "Taux préférentiel",
+    "top10Exporter": "Parmi les 10 plus grands exportateurs mondiaux"
+  },
+  "error": {
+    "title": "Données temporairement indisponibles",
+    "body": "Nous n'avons pas pu charger cette page pour le moment. Veuillez réessayer dans un instant.",
+    "retry": "Réessayer"
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "body": "La page que vous recherchez n'existe pas ou a peut-être été déplacée.",
+    "home": "Retour à l'accueil"
+  },
+  "chart": {
+    "aria": "Importations canadiennes mensuelles, 24 derniers mois"
   },
   "footer": {
     "data": "Données : CICM StatCan {cimt}, tarif ASFC {cbsa}, UN Comtrade {comtrade}",
