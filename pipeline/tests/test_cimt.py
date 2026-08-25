@@ -1,10 +1,18 @@
 from pathlib import Path
 
 import pandas as pd
+import pytest
+import requests
 
 from northsource_pipeline import cimt
 from northsource_pipeline.paths import Layout
 from tests.conftest import cty_desc_line, hs6_desc_line
+
+
+def _http_error(status_code: int) -> requests.HTTPError:
+    resp = requests.Response()
+    resp.status_code = status_code
+    return requests.HTTPError(f"{status_code} error", response=resp)
 
 
 def test_parse_hs6_desc_keeps_active_only_and_latest_text():
@@ -114,3 +122,59 @@ def test_fetch_cimt_downloads_and_extracts(layout: Layout, monkeypatch, tmp_path
     folders = mod.fetch_cimt(fresh)
     assert [f.name for f in folders] == ["CIMT-CICM_Imp_2025", "CIMT-CICM_Imp_2026"]
     assert (folders[1] / "ODPFN015_202612N.csv").exists()
+
+
+def test_fetch_cimt_tolerates_missing_current_year_zip(layout: Layout, monkeypatch, tmp_path: Path):
+    import io
+    import zipfile
+
+    from northsource_pipeline import cimt as mod
+
+    def fake_download(url, dest, **kw):
+        year = int(dest.stem.split("_")[-1])
+        if year == layout.period.year:  # 2026, not yet published
+            raise _http_error(404)
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w") as z:
+            z.writestr(f"{dest.stem}/ODPFN015_202512N.csv", "x")
+        dest.write_bytes(buf.getvalue())
+        return dest
+
+    monkeypatch.setattr(mod, "download", fake_download)
+    fresh = Layout(tmp_path / "fresh", layout.period)
+    folders = mod.fetch_cimt(fresh)
+    assert [f.name for f in folders] == ["CIMT-CICM_Imp_2025"]
+
+
+def test_fetch_cimt_previous_year_404_still_raises(layout: Layout, monkeypatch, tmp_path: Path):
+    from northsource_pipeline import cimt as mod
+
+    def fake_download(url, dest, **kw):
+        raise _http_error(404)
+
+    monkeypatch.setattr(mod, "download", fake_download)
+    fresh = Layout(tmp_path / "fresh", layout.period)
+    with pytest.raises(requests.HTTPError):
+        mod.fetch_cimt(fresh)
+
+
+def test_fetch_cimt_non_404_error_always_raises(layout: Layout, monkeypatch, tmp_path: Path):
+    import io
+    import zipfile
+
+    from northsource_pipeline import cimt as mod
+
+    def fake_download(url, dest, **kw):
+        year = int(dest.stem.split("_")[-1])
+        if year == layout.period.year:
+            raise _http_error(500)
+        buf = io.BytesIO()
+        with zipfile.ZipFile(buf, "w") as z:
+            z.writestr(f"{dest.stem}/ODPFN015_202512N.csv", "x")
+        dest.write_bytes(buf.getvalue())
+        return dest
+
+    monkeypatch.setattr(mod, "download", fake_download)
+    fresh = Layout(tmp_path / "fresh", layout.period)
+    with pytest.raises(requests.HTTPError):
+        mod.fetch_cimt(fresh)

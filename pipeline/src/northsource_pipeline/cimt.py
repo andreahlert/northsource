@@ -9,6 +9,7 @@ from pathlib import Path
 
 import duckdb
 import pandas as pd
+import requests
 
 from .countries import cimt_to_iso3
 from .http import download
@@ -29,7 +30,17 @@ def fetch_cimt(layout: Layout) -> list[Path]:
     folders = []
     for year in (layout.period.previous_year, layout.period.year):
         zip_path = layout.raw("cimt") / f"CIMT-CICM_Imp_{year}.zip"
-        download(ZIP_URL.format(year=year), zip_path, timeout=600)
+        try:
+            download(ZIP_URL.format(year=year), zip_path, timeout=600)
+        except requests.HTTPError as exc:
+            status = exc.response.status_code if exc.response is not None else None
+            if status == 404 and year == layout.period.year:
+                # StatCan does not publish the current year until early spring. Skip it,
+                # the run continues on the previous year alone. A 404 on the previous
+                # year, or any non-404 error on either year, still aborts the run.
+                log.warning("CIMT %d zip not yet published (404), skipping current year", year)
+                continue
+            raise
         folder = year_folder(layout, year)
         if not folder.exists():
             with zipfile.ZipFile(zip_path) as z:
@@ -81,6 +92,13 @@ def _csv_list(paths: list[Path]) -> str:
     return "[" + ", ".join(f"'{p.as_posix()}'" for p in paths) + "]"
 
 
+def _single_csv(folder: Path, pattern: str) -> Path:
+    try:
+        return next(folder.glob(pattern))
+    except StopIteration:
+        raise FileNotFoundError(f"no file matching {pattern!r} in {folder}") from None
+
+
 def aggregate_imports(hs6_csvs: list[Path]) -> pd.DataFrame:
     """Sum province/state rows to national level per month x HS6 x CIMT country code."""
     q = f"""
@@ -92,7 +110,7 @@ def aggregate_imports(hs6_csvs: list[Path]) -> pd.DataFrame:
         FROM read_csv({_csv_list(hs6_csvs)}, header=true,
                       names=['ym','hs6','country','province','state','value','quantity','uom'],
                       types={{'ym':'BIGINT','hs6':'VARCHAR','country':'VARCHAR','province':'VARCHAR',
-                             'state':'VARCHAR','value':'BIGINT','quantity':'BIGINT','uom':'VARCHAR'}},
+                             'state':'VARCHAR','value':'BIGINT','quantity':'VARCHAR','uom':'VARCHAR'}},
                       union_by_name=false)
         GROUP BY 1, 2, 3, 4
         ORDER BY 1, 2, 3, 4
@@ -107,7 +125,7 @@ def monthly_totals(hs6_csvs: list[Path], hs2_csvs: list[Path]) -> pd.DataFrame:
             FROM read_csv({_csv_list(hs6_csvs)}, header=true,
                           names=['ym','hs6','country','province','state','value','quantity','uom'],
                           types={{'ym':'BIGINT','hs6':'VARCHAR','country':'VARCHAR','province':'VARCHAR',
-                                 'state':'VARCHAR','value':'BIGINT','quantity':'BIGINT','uom':'VARCHAR'}})
+                                 'state':'VARCHAR','value':'BIGINT','quantity':'VARCHAR','uom':'VARCHAR'}})
             GROUP BY ym),
         h2 AS (
             SELECT ym, SUM(value) AS hs2_total
@@ -132,8 +150,8 @@ def parse_cimt(layout: Layout) -> None:
     folders = [f for f in folders if f.exists()]
     if not folders:
         raise FileNotFoundError("no CIMT year folder found, run fetch first")
-    hs6_csvs = [next(f.glob("ODPFN015_*N.csv")) for f in folders]
-    hs2_csvs = [next(f.glob("ODPFN022_*N.csv")) for f in folders]
+    hs6_csvs = [_single_csv(f, "ODPFN015_*N.csv") for f in folders]
+    hs2_csvs = [_single_csv(f, "ODPFN022_*N.csv") for f in folders]
     latest = folders[-1]
     st = layout.staging()
 
