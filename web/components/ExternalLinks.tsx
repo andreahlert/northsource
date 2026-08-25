@@ -9,7 +9,7 @@ export default async function ExternalLinks({ links, name }: { links: CountryRes
     <section className="rounded-lg border border-neutral-200 p-4 text-sm">
       <h2 className="mb-2 font-semibold">{t("links", { name })}</h2>
       <ul className="grid gap-2 sm:grid-cols-2">
-        {ORDER.map((k) => (
+        {ORDER.filter((k) => links[k].startsWith("https://")).map((k) => (
           <li key={k}>
             <a
               href={links[k]}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import { fmtCad, monthLabel } from "@/lib/format";
 import type { Lang } from "@/lib/types";
@@ -11,9 +12,10 @@ interface Point {
 }
 
 export default function ImportChart({ points, lang }: { points: Point[]; lang: Lang }) {
+  const t = useTranslations("chart");
   const data = points.map((p) => ({ label: monthLabel(p.year, p.month, lang), value: p.value_cad }));
   return (
-    <div className="h-64 w-full" data-testid="import-chart">
+    <div className="h-64 w-full" data-testid="import-chart" role="img" aria-label={t("aria")}>
       <ResponsiveContainer width="100%" height="100%" minWidth={300} minHeight={200}>
         <LineChart data={data} margin={{ top: 8, right: 16, bottom: 8, left: 8 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="#e5e5e5" />

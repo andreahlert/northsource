@@ -16,7 +16,7 @@ export default function LocaleSwitch() {
     `px-2 py-1 text-sm rounded ${locale === l ? "bg-neutral-900 text-white" : "text-neutral-600 hover:bg-neutral-100"}`;
 
   return (
-    <div className="flex gap-1" aria-label="Language">
+    <div className="flex gap-1" aria-label="Language" role="group">
       <button type="button" className={cls("en")} onClick={() => set("en")} aria-pressed={locale === "en"} data-testid="lang-en">EN</button>
       <button type="button" className={cls("fr")} onClick={() => set("fr")} aria-pressed={locale === "fr"} data-testid="lang-fr">FR</button>
     </div>
