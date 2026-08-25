@@ -94,3 +94,8 @@ def test_hs_surtax_null_source(client, database_url):
                 ("SOR/2025-95", "72061000"),
             )
             conn.commit()
+
+
+def test_hs_no_alternative_rank_rows(client):
+    b = client.get("/hs/040620").json()
+    assert [a["iso"] for a in b["alternatives"]] == ["USA"]

@@ -1,6 +1,10 @@
+import psycopg
+
+
 def test_meta(client):
     r = client.get("/meta")
     assert r.status_code == 200
+    assert r.headers["cache-control"] == "public, max-age=86400"
     b = r.json()
     assert b["data_version"]["cimt"] == "2026-06"
     assert b["counts"] == {
@@ -37,7 +41,9 @@ def test_ready_unavailable(app, client, monkeypatch):
 
 
 def test_featured_and_sitemap(client):
-    f = client.get("/featured").json()
+    fr = client.get("/featured")
+    assert fr.headers["cache-control"] == "public, max-age=86400"
+    f = fr.json()
     assert f["items"] == [
         {
             "hs6": "720610",
@@ -46,7 +52,28 @@ def test_featured_and_sitemap(client):
             "ca_import_12m_cad": 60_000_000,
         }
     ]
-    assert client.get("/sitemap").json() == {"hs6": ["040610", "720610", "847130"]}
+    sr = client.get("/sitemap")
+    assert sr.headers["cache-control"] == "public, max-age=86400"
+    assert sr.json() == {"hs6": ["040610", "720610", "847130"]}
+
+
+def test_sitemap_includes_hs6_with_only_ca_import(client, database_url):
+    with psycopg.connect(database_url) as conn:
+        conn.execute(
+            "INSERT INTO ca_import (hs6, partner_iso, year, month, value_cad) "
+            "VALUES (%s, %s, %s, %s, %s)",
+            ("040620", "FRA", 2020, 1, 100),
+        )
+        conn.commit()
+    try:
+        assert "040620" in client.get("/sitemap").json()["hs6"]
+    finally:
+        with psycopg.connect(database_url) as conn:
+            conn.execute(
+                "DELETE FROM ca_import WHERE hs6 = %s AND partner_iso = %s AND year = %s AND month = %s",
+                ("040620", "FRA", 2020, 1),
+            )
+            conn.commit()
 
 
 def test_cors_header(client):

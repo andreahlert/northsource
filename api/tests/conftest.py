@@ -21,14 +21,14 @@ from testcontainers.postgres import PostgresContainer
 # `client` fixture are then a plain module lookup and raise nothing, so `-W error` stays
 # meaningful for actual application warnings.
 with warnings.catch_warnings():
-    warnings.simplefilter("ignore")
+    from starlette.exceptions import StarletteDeprecationWarning
+
+    warnings.filterwarnings("ignore", category=StarletteDeprecationWarning)
     from fastapi.testclient import TestClient as _TestClient  # noqa: F401
 
 SCHEMA = (
     Path(__file__).resolve().parents[2] / "pipeline" / "src" / "northsource_pipeline" / "schema.sql"
 )
-
-NOTE = "25% surtax on US-origin goods that do not qualify under CUSMA"
 
 HS = [
     (

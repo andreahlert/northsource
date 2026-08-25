@@ -21,7 +21,7 @@ Open http://localhost:8000/docs for the OpenAPI UI.
 | `GET /hs/{hs6}?lang=` | Description, MFN, US surtax, ranked alternatives (US first, flagged) |
 | `GET /hs/{hs6}/country/{iso}?lang=` | 24-month import series, tariff card, rank, external links |
 | `GET /featured` | Up to 8 HS6 with a US surtax, by US import volume |
-| `GET /sitemap` | Every HS6 with alternatives |
+| `GET /sitemap` | Every HS6 with data |
 | `GET /meta` | Data versions and row counts |
 | `GET /health` | Liveness |
 
@@ -31,7 +31,7 @@ Every route except `/health` sends `Cache-Control: public, max-age=86400`.
 ## Tests
 
 ```bash
-uv run pytest -v      # needs Docker (testcontainers Postgres)
+uv run pytest -W error      # needs Docker (testcontainers Postgres)
 uv run ruff check src tests
 ```
 

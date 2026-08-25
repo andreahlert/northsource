@@ -1,3 +1,5 @@
+import inspect
+
 import psycopg
 import pytest
 from psycopg.rows import dict_row
@@ -30,6 +32,20 @@ def test_search_text_and_prefix(conn):
     assert [r["hs6"] for r in q.search_codes(conn, "ingots", "en")] == ["720610"]
 
 
+def test_search_codes_cap(conn):
+    rows = [
+        (f"9910{i:02d}", f"Zzyzx widget variant {i}", f"Zzyzx variante {i}", "99")
+        for i in range(25)
+    ]
+    conn.cursor().executemany(
+        "INSERT INTO hs_code (hs6, desc_en, desc_fr, chapter) VALUES (%s, %s, %s, %s)", rows
+    )
+    try:
+        assert len(q.search_codes(conn, "zzyzx", "en")) == 20
+    finally:
+        conn.rollback()
+
+
 def test_get_hs_and_suggest(conn):
     assert q.get_hs(conn, "040610")["chapter"] == "04"
     assert q.get_hs(conn, "999999") is None
@@ -37,6 +53,11 @@ def test_get_hs_and_suggest(conn):
     assert [r["hs6"] for r in q.suggest(conn, "04")] == ["040610", "040620"]
     assert q.suggest(conn, "999999") == []
     assert set(q.suggest(conn, "0406")[0]) == {"hs6", "desc"}
+
+
+def test_suggest_cap(conn):
+    assert inspect.signature(q.suggest).parameters["n"].default == 5
+    assert len(q.suggest(conn, "040699", n=1)) == 1
 
 
 def test_hs_mfn_and_surtax(conn):

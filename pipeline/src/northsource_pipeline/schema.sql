@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS ca_import (
     value_cad    bigint NOT NULL,
     PRIMARY KEY (hs6, partner_iso, year, month)
 );
+CREATE INDEX IF NOT EXISTS ca_import_year_month ON ca_import (year DESC, month DESC);
 
 CREATE TABLE IF NOT EXISTS world_export (
     hs6           char(6) NOT NULL REFERENCES hs_code (hs6),

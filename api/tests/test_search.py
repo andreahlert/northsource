@@ -25,3 +25,4 @@ def test_search_validation(client):
     assert r.status_code == 422
     assert r.headers["cache-control"] == "no-store"
     assert client.get("/search", params={"q": "xyzzy"}).json()["results"] == []
+    assert client.get("/search", params={"q": "x" * 101}).status_code == 422

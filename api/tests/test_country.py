@@ -1,6 +1,7 @@
 def test_country_page(client):
     r = client.get("/hs/040610/country/FRA")
     assert r.status_code == 200
+    assert r.headers["cache-control"] == "public, max-age=86400"
     b = r.json()
     assert b["hs6"] == "040610" and b["desc_en"].startswith("Cheese")
     assert b["country"] == {

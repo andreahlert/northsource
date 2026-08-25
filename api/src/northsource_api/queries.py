@@ -206,5 +206,10 @@ def featured(
 def sitemap_ids(conn: Connection) -> list[str]:
     return [
         r["hs6"]
-        for r in conn.execute("SELECT DISTINCT hs6 FROM alternative_rank ORDER BY hs6").fetchall()
+        for r in conn.execute(
+            "SELECT hs6 FROM alternative_rank "
+            "UNION SELECT hs6 FROM ca_import "
+            "UNION SELECT hs6 FROM world_export "
+            "ORDER BY 1"
+        ).fetchall()
     ]
