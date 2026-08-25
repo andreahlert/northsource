@@ -1,0 +1,5 @@
+{
+  "data_version": { "cimt": "2026-06", "cbsa": "2026", "comtrade": "2025", "surtax": "SOR/2025-95;SOR/2025-118", "pipeline": "2026-08" },
+  "counts": { "hs_code": 4, "country": 6, "tariff_line": 5, "ca_import": 84, "world_export": 8, "alternative_rank": 7 },
+  "loaded_at": "2026-08-24T12:00:00+00:00"
+}

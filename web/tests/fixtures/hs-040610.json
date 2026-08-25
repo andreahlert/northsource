@@ -1,0 +1,18 @@
+{
+  "hs6": "040610",
+  "desc_en": "Cheese, fresh, unripened or uncured, including whey cheese and curd",
+  "desc_fr": "Fromage, frais, non affinés, le fromage de lactosérum et caillebotte",
+  "chapter": "04",
+  "mfn": { "text": "3.32¢/kg", "pct": null, "display": "3.32¢/kg" },
+  "surtax_us": { "pct": 25.0, "source": "SOR/2025-118", "hs8": ["04061010"], "note": "25% surtax on US-origin goods that do not qualify under CUSMA" },
+  "coverage": "canada",
+  "window": { "from": "2025-07", "to": "2026-06" },
+  "data_version": { "cimt": "2026-06", "cbsa": "2026", "comtrade": "2025", "surtax": "SOR/2025-95;SOR/2025-118", "pipeline": "2026-08" },
+  "alternatives": [
+    { "iso": "USA", "name": "United States of America", "is_current_us_source": true, "already_supplies_canada": true, "ca_import_12m_cad": 36000000, "world_export_usd": 1000000000.0, "tariff_treatment": null, "rate_applied": null, "rate_applied_pct": null, "rate_mfn": "3.32¢/kg", "rate_mfn_pct": null, "fta": "CUSMA", "score": null, "score_reasons": [] },
+    { "iso": "FRA", "name": "France", "is_current_us_source": false, "already_supplies_canada": true, "ca_import_12m_cad": 10800000, "world_export_usd": 1500000000.0, "tariff_treatment": "CEUT", "rate_applied": "0%", "rate_applied_pct": 0.0, "rate_mfn": "3.32¢/kg", "rate_mfn_pct": null, "fta": "CETA", "score": 95, "score_reasons": ["supplies Canada", "FTA 0%", "top-10 world exporter"] },
+    { "iso": "CHN", "name": "China", "is_current_us_source": false, "already_supplies_canada": true, "ca_import_12m_cad": 18000000, "world_export_usd": null, "tariff_treatment": "MFN", "rate_applied": "3.32¢/kg", "rate_applied_pct": null, "rate_mfn": "3.32¢/kg", "rate_mfn_pct": null, "fta": null, "score": 70, "score_reasons": ["supplies Canada"] },
+    { "iso": "DEU", "name": "Germany", "is_current_us_source": false, "already_supplies_canada": false, "ca_import_12m_cad": 0, "world_export_usd": 2400000000.0, "tariff_treatment": "CEUT", "rate_applied": "0%", "rate_applied_pct": 0.0, "rate_mfn": "3.32¢/kg", "rate_mfn_pct": null, "fta": "CETA", "score": 62, "score_reasons": ["FTA 0%", "top-10 world exporter"] },
+    { "iso": "NLD", "name": "Netherlands", "is_current_us_source": false, "already_supplies_canada": false, "ca_import_12m_cad": 0, "world_export_usd": 1200000000.0, "tariff_treatment": "CEUT", "rate_applied": "0%", "rate_applied_pct": 0.0, "rate_mfn": "3.32¢/kg", "rate_mfn_pct": null, "fta": "CETA", "score": 55, "score_reasons": ["FTA 0%", "top-10 world exporter"] }
+  ]
+}

@@ -1,0 +1,6 @@
+{
+  "items": [
+    { "hs6": "040610", "desc": "Cheese, fresh, unripened or uncured, including whey cheese and curd", "surtax_us_pct": 25.0, "ca_import_12m_cad": 36000000 },
+    { "hs6": "720610", "desc": "Iron and non-alloy steel in ingots", "surtax_us_pct": 25.0, "ca_import_12m_cad": 60000000 }
+  ]
+}
