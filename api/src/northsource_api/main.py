@@ -16,9 +16,11 @@ from .routes import CountryNotFound, HsNotFound, router
 log = logging.getLogger("northsource_api")
 
 CACHE_PUBLIC = "public, max-age=86400"
+NO_STORE_PATHS = {"/health", "/ready"}
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
+    logging.basicConfig(level=logging.INFO)
     settings = settings or Settings()
 
     @asynccontextmanager
@@ -39,9 +41,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.middleware("http")
     async def cache_control(request: Request, call_next):
         response = await call_next(request)
-        response.headers["Cache-Control"] = (
-            "no-store" if request.url.path == "/health" else CACHE_PUBLIC
-        )
+        cacheable = request.url.path not in NO_STORE_PATHS and response.status_code < 300
+        response.headers["Cache-Control"] = CACHE_PUBLIC if cacheable else "no-store"
         return response
 
     @app.exception_handler(HsNotFound)
@@ -54,12 +55,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.exception_handler(CountryNotFound)
     async def country_not_found(request: Request, exc: CountryNotFound):
         return JSONResponse(
-            status_code=404, content={"detail": "country not found", "iso": str(exc)}
+            status_code=404, content={"detail": "country not found", "iso": exc.iso}
         )
 
     @app.exception_handler(Exception)
     async def unhandled(request: Request, exc: Exception):
         log.exception("unhandled error on %s", request.url.path)
-        return JSONResponse(status_code=500, content={"detail": "internal error"})
+        return JSONResponse(
+            status_code=500,
+            content={"detail": "internal error"},
+            headers={"Cache-Control": "no-store"},
+        )
 
     return app

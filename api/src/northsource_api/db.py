@@ -11,7 +11,9 @@ from psycopg_pool import ConnectionPool
 
 
 def create_pool(url: str) -> ConnectionPool:
-    return ConnectionPool(url, min_size=1, max_size=5, open=False, kwargs={"row_factory": dict_row})
+    return ConnectionPool(
+        url, min_size=1, max_size=5, timeout=5, open=False, kwargs={"row_factory": dict_row}
+    )
 
 
 def get_conn(request: Request) -> Iterator[Connection]:

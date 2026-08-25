@@ -1,3 +1,5 @@
+import psycopg
+
 NOTE = "25% surtax on US-origin goods that do not qualify under CUSMA"
 
 
@@ -67,7 +69,7 @@ def test_hs_world_only(client):
 def test_hs_not_found_with_suggestions(client):
     r = client.get("/hs/040699")
     assert r.status_code == 404
-    assert r.headers["cache-control"] == "public, max-age=86400"
+    assert r.headers["cache-control"] == "no-store"
     b = r.json()
     assert b["detail"] == "HS6 not found" and b["hs6"] == "040699"
     assert [s["hs6"] for s in b["suggestions"]] == ["040610", "040620"]
@@ -75,3 +77,20 @@ def test_hs_not_found_with_suggestions(client):
     assert client.get("/hs/04").json()["suggestions"][0]["hs6"] == "040610"
     assert client.get("/hs/abcdef").json()["suggestions"] == []
     assert client.get("/hs/999999").json()["suggestions"] == []
+
+
+def test_hs_surtax_null_source(client, database_url):
+    with psycopg.connect(database_url) as conn:
+        conn.execute("UPDATE tariff_line SET surtax_source = NULL WHERE hs8 = %s", ("72061000",))
+        conn.commit()
+    try:
+        r = client.get("/hs/720610")
+        assert r.status_code == 200
+        assert r.json()["surtax_us"]["source"] is None
+    finally:
+        with psycopg.connect(database_url) as conn:
+            conn.execute(
+                "UPDATE tariff_line SET surtax_source = %s WHERE hs8 = %s",
+                ("SOR/2025-95", "72061000"),
+            )
+            conn.commit()

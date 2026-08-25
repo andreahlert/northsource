@@ -27,7 +27,7 @@ class RateOut(BaseModel):
 
 class SurtaxOut(BaseModel):
     pct: float
-    source: str
+    source: str | None
     hs8: list[str]
     note: str
 

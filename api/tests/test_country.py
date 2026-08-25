@@ -58,6 +58,7 @@ def test_country_page_fr(client):
 def test_country_not_found(client):
     r = client.get("/hs/040610/country/ZZZ")
     assert r.status_code == 404 and r.json()["detail"] == "country not found"
+    assert r.headers["cache-control"] == "no-store"
     r = client.get("/hs/040699/country/FRA")
     assert r.status_code == 404 and [s["hs6"] for s in r.json()["suggestions"]] == [
         "040610",

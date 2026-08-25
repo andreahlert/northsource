@@ -20,6 +20,22 @@ def test_health_not_cached(client):
     assert r.headers["cache-control"] == "no-store"
 
 
+def test_ready_ok(client):
+    r = client.get("/ready")
+    assert r.status_code == 200 and r.json() == {"status": "ok"}
+    assert r.headers["cache-control"] == "no-store"
+
+
+def test_ready_unavailable(app, client, monkeypatch):
+    def boom(*args, **kwargs):
+        raise RuntimeError("pool down")
+
+    monkeypatch.setattr(app.state.pool, "connection", boom)
+    r = client.get("/ready")
+    assert r.status_code == 503 and r.json() == {"status": "unavailable"}
+    assert r.headers["cache-control"] == "no-store"
+
+
 def test_featured_and_sitemap(client):
     f = client.get("/featured").json()
     assert f["items"] == [

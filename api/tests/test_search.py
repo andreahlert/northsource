@@ -21,5 +21,7 @@ def test_search_prefix_and_fr(client):
 def test_search_validation(client):
     assert client.get("/search").status_code == 422
     assert client.get("/search", params={"q": ""}).status_code == 422
-    assert client.get("/search", params={"q": "cheese", "lang": "de"}).status_code == 422
+    r = client.get("/search", params={"q": "cheese", "lang": "de"})
+    assert r.status_code == 422
+    assert r.headers["cache-control"] == "no-store"
     assert client.get("/search", params={"q": "xyzzy"}).json()["results"] == []

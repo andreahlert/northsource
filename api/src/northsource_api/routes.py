@@ -2,10 +2,12 @@
 
 from __future__ import annotations
 
+import logging
 import re
 from typing import Annotated, Literal
 
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
+from fastapi.responses import JSONResponse
 from psycopg import Connection
 
 from . import queries as q
@@ -31,6 +33,8 @@ from .schemas import (
     WorldExportOut,
 )
 
+log = logging.getLogger("northsource_api")
+
 router = APIRouter()
 
 SURTAX_NOTE = "25% surtax on US-origin goods that do not qualify under CUSMA"
@@ -50,7 +54,9 @@ class HsNotFound(Exception):
 
 
 class CountryNotFound(Exception):
-    pass
+    def __init__(self, iso: str):
+        super().__init__(iso)
+        self.iso = iso
 
 
 def _window(conn: Connection, months: int) -> list[tuple[int, int]]:
@@ -216,3 +222,14 @@ def sitemap(conn: Conn):
 @router.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@router.get("/ready")
+def ready(request: Request):
+    try:
+        with request.app.state.pool.connection() as conn:
+            conn.execute("SELECT 1")
+        return {"status": "ok"}
+    except Exception:
+        log.exception("readiness check failed")
+        return JSONResponse(status_code=503, content={"status": "unavailable"})
