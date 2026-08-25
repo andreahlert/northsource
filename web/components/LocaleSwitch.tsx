@@ -17,8 +17,8 @@ export default function LocaleSwitch() {
 
   return (
     <div className="flex gap-1" aria-label="Language">
-      <button type="button" className={cls("en")} onClick={() => set("en")} data-testid="lang-en">EN</button>
-      <button type="button" className={cls("fr")} onClick={() => set("fr")} data-testid="lang-fr">FR</button>
+      <button type="button" className={cls("en")} onClick={() => set("en")} aria-pressed={locale === "en"} data-testid="lang-en">EN</button>
+      <button type="button" className={cls("fr")} onClick={() => set("fr")} aria-pressed={locale === "fr"} data-testid="lang-fr">FR</button>
     </div>
   );
 }
