@@ -55,12 +55,12 @@ _LIST_COLUMNS = {"treatments", "score_reasons"}
 
 
 def _cell(col: str, value):
+    if value is None:
+        return None
     if col in _JSON_COLUMNS:
         return Jsonb(json.loads(value))
     if col in _LIST_COLUMNS:
         return list(value)
-    if value is None:
-        return None
     if isinstance(value, float) and math.isnan(value):
         return None
     if hasattr(value, "item"):  # numpy scalar -> python

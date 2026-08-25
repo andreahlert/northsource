@@ -79,8 +79,10 @@ def main(argv: list[str] | None = None) -> int:
         format="%(asctime)s %(levelname)s %(name)s: %(message)s",
     )
     layout = Layout(args.data_dir, args.period)
-    tariff_year = args.tariff_year or args.period.year
-    comtrade_year = args.comtrade_year or args.period.previous_year
+    tariff_year = args.tariff_year if args.tariff_year is not None else args.period.year
+    comtrade_year = (
+        args.comtrade_year if args.comtrade_year is not None else args.period.previous_year
+    )
     stages = ["fetch", "parse", "validate", "rank", "load"] if args.stage == "run" else [args.stage]
 
     if "load" in stages and not os.environ.get("DATABASE_URL"):
