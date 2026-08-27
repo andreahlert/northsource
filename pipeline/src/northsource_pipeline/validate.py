@@ -25,6 +25,15 @@ MINIMUMS: dict[str, int] = {
 }
 
 
+def minimums_for(*, skip_comtrade: bool) -> dict[str, int]:
+    """Production floors, with the world_export floor lifted when Comtrade was skipped on
+    purpose (rank then works from Canadian imports only)."""
+    mins = dict(MINIMUMS)
+    if skip_comtrade:
+        mins["world_export"] = 0
+    return mins
+
+
 class ValidationError(Exception):
     pass
 

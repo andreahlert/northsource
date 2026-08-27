@@ -20,6 +20,16 @@ def test_validate_passes_on_fixture(parsed: Layout):
     assert validate.validate(parsed, surtax_ranges=RANGES, minimums=MINS) == []
 
 
+def test_minimums_for_skip_comtrade_lifts_only_world_export():
+    mins = validate.minimums_for(skip_comtrade=True)
+    assert mins["world_export"] == 0
+    assert {k: v for k, v in mins.items() if k != "world_export"} == {
+        k: v for k, v in validate.MINIMUMS.items() if k != "world_export"
+    }
+    assert validate.minimums_for(skip_comtrade=False) == validate.MINIMUMS
+    assert validate.MINIMUMS["world_export"] == 10_000
+
+
 def test_validate_default_ranges_fail_on_small_fixture(parsed: Layout):
     with pytest.raises(validate.ValidationError) as exc:
         validate.validate(parsed)

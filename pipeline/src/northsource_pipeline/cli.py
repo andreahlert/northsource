@@ -16,7 +16,7 @@ from .paths import DEFAULT_ROOT, Layout, Period
 from .rank import write_rank
 from .stages import run_parse
 from .surtax import fetch_surtax
-from .validate import ValidationError, validate
+from .validate import ValidationError, minimums_for, validate
 
 log = logging.getLogger("northsource_pipeline")
 
@@ -104,7 +104,11 @@ def main(argv: list[str] | None = None) -> int:
             run_parse(layout)
         elif stage == "validate":
             try:
-                validate(layout, surtax_ranges=SURTAX_RANGES_OVERRIDE)
+                validate(
+                    layout,
+                    surtax_ranges=SURTAX_RANGES_OVERRIDE,
+                    minimums=minimums_for(skip_comtrade=args.skip_comtrade),
+                )
             except ValidationError as exc:
                 log.error("validation failed: %s", exc)
                 return 1
