@@ -10,7 +10,26 @@
     "featured": "Products hit by the 25% surtax",
     "how1": "Search by product name or HS code",
     "how2": "Compare countries by volume and tariff into Canada",
-    "how3": "Jump to supplier directories filtered for that product"
+    "how3": "Jump to supplier directories filtered for that product",
+    "trust": "Free. Built on open data from Statistics Canada, CBSA and UN Comtrade.",
+    "heroAlt": "Canadians from every walk of life standing together at the port of Vancouver",
+    "statsCodes": "HS codes covered",
+    "statsCountries": "countries compared",
+    "statsRecords": "import records analysed",
+    "statsUpdated": "Data through {period}",
+    "categoriesTitle": "Browse by category",
+    "categoriesSub": "The products Canada buys most from the US. Pick one to see who else sells it.",
+    "doorsTitle": "Canada opens its doors to the world",
+    "doorsBody": "Every tariff is also an invitation. Canada has free trade agreements with 51 countries, and most of them already ship what you import from the US. northsource shows you where, at what duty, and how to reach the suppliers.",
+    "doorsCta": "Find your alternatives",
+    "doorsAlt": "Maple doors opening onto trade routes across the world",
+    "importerTitle": "Built for the people who actually place the orders",
+    "importerBody": "No consultants, no paywall. Type what you import and get a shortlist you can act on today.",
+    "importer1": "Real duty rates from the CBSA Customs Tariff, per country and agreement",
+    "importer2": "Ranked by who already supplies Canada, so you can start with proven exporters",
+    "importer3": "One click to the Trade Commissioner Service and supplier directories for that product",
+    "importerAlt": "A Canadian importer on a video call with international suppliers in her warehouse",
+    "example": "e.g."
   },
   "search": {
     "noResults": "No matching HS codes",
@@ -88,5 +107,15 @@
     "data": "Data: StatCan CIMT {cimt}, CBSA tariff {cbsa}, UN Comtrade {comtrade}",
     "noData": "No data loaded yet",
     "license": "Open data, MIT licensed"
+  },
+  "categories": {
+    "vehicles": "Vehicles and parts",
+    "machinery": "Machinery and engines",
+    "electronics": "Electronics",
+    "steel": "Steel and aluminum",
+    "food": "Food and agriculture",
+    "plastics": "Plastics and chemicals",
+    "medical": "Pharma and medical",
+    "wood": "Wood, paper and furniture"
   }
 }

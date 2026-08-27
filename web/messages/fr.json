@@ -10,7 +10,26 @@
     "featured": "Produits visés par la surtaxe de 25 %",
     "how1": "Cherchez par nom de produit ou code SH",
     "how2": "Comparez les pays par volume et tarif à l'entrée au Canada",
-    "how3": "Accédez aux répertoires de fournisseurs filtrés pour ce produit"
+    "how3": "Accédez aux répertoires de fournisseurs filtrés pour ce produit",
+    "trust": "Gratuit. Bâti sur les données ouvertes de Statistique Canada, de l'ASFC et d'UN Comtrade.",
+    "heroAlt": "Des Canadiens de tous horizons réunis au port de Vancouver",
+    "statsCodes": "codes SH couverts",
+    "statsCountries": "pays comparés",
+    "statsRecords": "enregistrements d'importation analysés",
+    "statsUpdated": "Données jusqu'à {period}",
+    "categoriesTitle": "Explorer par catégorie",
+    "categoriesSub": "Les produits que le Canada achète le plus aux États-Unis. Choisissez-en un pour voir qui d'autre le vend.",
+    "doorsTitle": "Le Canada ouvre ses portes au monde",
+    "doorsBody": "Chaque tarif est aussi une invitation. Le Canada a des accords de libre-échange avec 51 pays, et la plupart expédient déjà ce que vous importez des États-Unis. northsource vous montre où, à quel droit de douane et comment joindre les fournisseurs.",
+    "doorsCta": "Trouver vos alternatives",
+    "doorsAlt": "Des portes d'érable s'ouvrant sur les routes commerciales du monde",
+    "importerTitle": "Conçu pour ceux qui passent vraiment les commandes",
+    "importerBody": "Pas de consultants, pas de mur payant. Tapez ce que vous importez et obtenez une liste courte, exploitable aujourd'hui.",
+    "importer1": "Taux de droits réels du Tarif des douanes de l'ASFC, par pays et par accord",
+    "importer2": "Classé selon qui fournit déjà le Canada, pour commencer par des exportateurs éprouvés",
+    "importer3": "Un clic vers le Service des délégués commerciaux et les répertoires de fournisseurs du produit",
+    "importerAlt": "Une importatrice canadienne en visioconférence avec des fournisseurs internationaux dans son entrepôt",
+    "example": "ex."
   },
   "search": {
     "noResults": "Aucun code SH correspondant",
@@ -88,5 +107,15 @@
     "data": "Données : CICM StatCan {cimt}, tarif ASFC {cbsa}, UN Comtrade {comtrade}",
     "noData": "Aucune donnée chargée",
     "license": "Données ouvertes, licence MIT"
+  },
+  "categories": {
+    "vehicles": "Véhicules et pièces",
+    "machinery": "Machines et moteurs",
+    "electronics": "Électronique",
+    "steel": "Acier et aluminium",
+    "food": "Alimentation et agriculture",
+    "plastics": "Plastiques et produits chimiques",
+    "medical": "Pharma et médical",
+    "wood": "Bois, papier et meubles"
   }
 }
