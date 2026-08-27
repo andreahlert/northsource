@@ -4,11 +4,11 @@ export default async function SurtaxBadge({ pct, source }: { pct: number; source
   const t = await getTranslations("result");
   return (
     <div
-      className="inline-flex flex-col gap-0.5 rounded-md border border-red-300 bg-red-50 px-3 py-2 text-red-900"
+      className="flex max-w-xl flex-col gap-0.5 border-l-4 border-maple bg-maple-tint px-4 py-3 text-ink"
       data-testid="surtax-badge"
     >
       <span className="font-medium">{t("surtax", { pct })}</span>
-      {source && <span className="text-xs text-red-800/80">{t("surtaxSource", { source })}</span>}
+      {source && <span className="text-xs text-ink-2">{t("surtaxSource", { source })}</span>}
     </div>
   );
 }

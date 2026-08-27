@@ -1,9 +1,40 @@
 @import "tailwindcss";
 
+@theme {
+  --color-paper: #faf7f2;
+  --color-paper-2: #f3eee6;
+  --color-ink: #1b1b1b;
+  --color-ink-2: #6b6560;
+  --color-rule: #e6dfd5;
+  --color-maple: #d52b1e;
+  --color-maple-dark: #b3241a;
+  --color-maple-tint: #fbeae7;
+  --color-pine: #2f4f3e;
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+}
+
+@utility eyebrow {
+  @apply text-xs font-semibold uppercase tracking-[0.18em] text-maple;
+}
+
+@utility kicker {
+  @apply text-[11px] font-semibold uppercase tracking-[0.14em] text-ink-2;
+}
+
 :root {
   color-scheme: light;
 }
 
 body {
-  @apply bg-white text-neutral-900 antialiased;
+  @apply bg-paper font-sans text-ink antialiased;
+}
+
+table,
+.tabular {
+  font-variant-numeric: tabular-nums;
+}
+
+::selection {
+  background: var(--color-maple-tint);
 }

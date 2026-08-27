@@ -1,7 +1,10 @@
 {
-  "app": { "name": "northsource", "tagline": "Non-US suppliers for what Canada imports" },
+  "app": {
+    "name": "northsource",
+    "tagline": "Non-US suppliers for what Canada imports"
+  },
   "home": {
-    "title": "Find non-US suppliers for what you import",
+    "title": "Where else can Canada buy it?",
     "subtitle": "Search a product or an HS code. See which countries export it, their tariff into Canada, and whether they already ship here.",
     "placeholder": "What do you import from the US? e.g. cheese, steel coils, 8471",
     "featured": "Products hit by the 25% surtax",
@@ -9,7 +12,10 @@
     "how2": "Compare countries by volume and tariff into Canada",
     "how3": "Jump to supplier directories filtered for that product"
   },
-  "search": { "noResults": "No matching HS codes", "searching": "Searching" },
+  "search": {
+    "noResults": "No matching HS codes",
+    "searching": "Searching"
+  },
   "result": {
     "metaTitle": "Alternatives to US {name} suppliers for Canada | HS {hs6}",
     "chapter": "Chapter {chapter}",

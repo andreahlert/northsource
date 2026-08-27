@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
+import { Fraunces, Inter } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import "./globals.css";
+
+const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces", axes: ["opsz"] });
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
   title: "northsource",
@@ -15,11 +19,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const messages = await getMessages();
   return (
     // Locale comes from the NEXT_LOCALE cookie; these pages must never be cached without Vary: Cookie.
-    <html lang={locale}>
+    <html lang={locale} className={`${fraunces.variable} ${inter.variable}`}>
       <body className="min-h-screen flex flex-col">
         <NextIntlClientProvider locale={locale} messages={messages}>
           <Header />
-          <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-8">{children}</main>
+          <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-10">{children}</main>
           <Footer />
         </NextIntlClientProvider>
       </body>

@@ -13,11 +13,14 @@ export default function LocaleSwitch() {
   }
 
   const cls = (l: string) =>
-    `px-2 py-1 text-sm rounded ${locale === l ? "bg-neutral-900 text-white" : "text-neutral-600 hover:bg-neutral-100"}`;
+    `px-1.5 py-1 text-sm font-medium tracking-wide underline-offset-[6px] decoration-2 ${
+      locale === l ? "text-ink underline decoration-maple" : "text-ink-2 hover:text-ink"
+    }`;
 
   return (
-    <div className="flex gap-1" aria-label="Language" role="group">
+    <div className="flex items-center gap-1" aria-label="Language" role="group">
       <button type="button" className={cls("en")} onClick={() => set("en")} aria-pressed={locale === "en"} data-testid="lang-en">EN</button>
+      <span className="text-rule" aria-hidden="true">|</span>
       <button type="button" className={cls("fr")} onClick={() => set("fr")} aria-pressed={locale === "fr"} data-testid="lang-fr">FR</button>
     </div>
   );

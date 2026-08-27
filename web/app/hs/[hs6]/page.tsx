@@ -33,16 +33,16 @@ export default async function HsPage({ params }: { params: Params }) {
 
   if (!r.ok) {
     return (
-      <div>
-        <h1 className="text-2xl font-semibold">{t("notFoundTitle", { hs6 })}</h1>
+      <div className="mx-auto max-w-3xl">
+        <h1 className="font-display text-3xl font-medium tracking-tight sm:text-4xl">{t("notFoundTitle", { hs6 })}</h1>
         {r.notFound.suggestions.length > 0 && (
           <>
-            <p className="mt-4 text-neutral-600">{t("notFoundHint")}</p>
-            <ul className="mt-2 space-y-1">
+            <p className="mt-4 text-ink-2">{t("notFoundHint")}</p>
+            <ul className="mt-3 divide-y divide-rule border-y border-rule">
               {r.notFound.suggestions.map((s) => (
                 <li key={s.hs6}>
-                  <Link href={`/hs/${s.hs6}`} className="underline" data-testid="suggestion">
-                    <span className="font-mono">{s.hs6}</span> {s.desc}
+                  <Link href={`/hs/${s.hs6}`} className="flex items-baseline gap-3 py-2.5 hover:text-maple" data-testid="suggestion">
+                    <span className="font-mono text-sm text-maple">{s.hs6}</span> {s.desc}
                   </Link>
                 </li>
               ))}
@@ -56,28 +56,29 @@ export default async function HsPage({ params }: { params: Params }) {
   const d = r.data;
   return (
     <div>
-      <p className="text-sm text-neutral-500">{t("chapter", { chapter: d.chapter })}</p>
-      <h1 className="mt-1 text-2xl font-semibold tracking-tight sm:text-3xl">
-        <span className="font-mono">{d.hs6}</span> <span className="font-normal">{desc(d, lang)}</span>
+      <p className="eyebrow">{t("chapter", { chapter: d.chapter })}</p>
+      <h1 className="mt-2 max-w-4xl font-display text-3xl font-medium leading-tight tracking-tight text-ink sm:text-4xl">
+        <span className="font-mono text-2xl font-normal text-ink-2 sm:text-3xl">{d.hs6}</span>{" "}
+        {desc(d, lang)}
       </h1>
-      <div className="mt-4 flex flex-wrap items-start gap-4">
+      <div className="mt-6 flex flex-wrap items-center gap-3">
         {d.surtax_us && <SurtaxBadge pct={d.surtax_us.pct} source={d.surtax_us.source} />}
         {d.mfn && (
-          <div className="rounded-md border border-neutral-200 px-3 py-2 text-sm">
-            <span className="text-neutral-500">{t("mfn")}: </span>
+          <div className="rounded-full border border-rule bg-white px-3.5 py-1.5 text-sm">
+            <span className="text-ink-2">{t("mfn")}: </span>
             <span className="font-medium">{d.mfn.display}</span>
           </div>
         )}
       </div>
       {d.coverage === "world_only" && (
-        <p className="mt-4 rounded-md bg-amber-50 px-3 py-2 text-sm text-amber-900" data-testid="world-only">
+        <p className="mt-4 max-w-xl border-l-4 border-amber-500 bg-amber-50 px-4 py-3 text-sm text-amber-950" data-testid="world-only">
           {t("worldOnly")}
         </p>
       )}
-      <p className="mt-6 text-xs text-neutral-500">
+      <p className="mt-10 text-xs text-ink-2">
         {t("window", { from: periodLabel(d.window.from, lang), to: periodLabel(d.window.to, lang) })}
       </p>
-      <div className="mt-2">
+      <div className="mt-3">
         <AlternativesTable hs6={d.hs6} alternatives={d.alternatives} lang={lang} />
       </div>
     </div>

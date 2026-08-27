@@ -39,32 +39,33 @@ export default async function CountryPage({ params }: { params: Params }) {
   const total = c.imports.reduce((s, p) => s + p.value_cad, 0);
   return (
     <div>
-      <Link href={`/hs/${hs6}`} className="text-sm text-neutral-500 underline">
-        {t("back", { hs6 })}
+      <Link href={`/hs/${hs6}`} className="text-sm text-ink-2 hover:text-maple">
+        <span aria-hidden="true">{"←"}</span> {t("back", { hs6 })}
       </Link>
-      <h1 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
+      <h1 className="mt-3 font-display text-4xl font-medium leading-tight tracking-tight text-ink sm:text-5xl">
         {c.country.name}
-        <span className="ml-2 font-mono text-lg font-normal text-neutral-500">{c.hs6}</span>
+        <span className="ml-3 font-mono text-xl font-normal text-ink-2 sm:text-2xl">{c.hs6}</span>
       </h1>
-      <p className="mt-1 text-neutral-600">{desc(c, lang)}</p>
+      <p className="mt-2 max-w-3xl text-lg text-ink-2">{desc(c, lang)}</p>
 
-      <section className="mt-6">
-        <h2 className="mb-2 text-sm font-medium text-neutral-600">{t("imports", { name: c.country.name })}</h2>
+      <section className="mt-8 border border-rule bg-white p-5">
+        <h2 className="kicker mb-3">{t("imports", { name: c.country.name })}</h2>
         {total > 0 ? (
           <ImportChart points={c.imports} lang={lang} />
         ) : (
-          <p className="rounded-md bg-neutral-50 px-3 py-4 text-sm text-neutral-500" data-testid="import-chart">
+          <p className="bg-paper px-3 py-6 text-center text-sm text-ink-2" data-testid="import-chart">
             {t("noImports")}
           </p>
         )}
         {c.world_export && c.world_export.value_usd !== null && (
-          <p className="mt-2 text-sm text-neutral-600">
-            {t("worldExport", { year: c.world_export.year })}: <strong>{fmtUsd(c.world_export.value_usd, lang)}</strong>
+          <p className="mt-3 text-sm text-ink-2">
+            {t("worldExport", { year: c.world_export.year })}:{" "}
+            <strong className="tabular text-ink">{fmtUsd(c.world_export.value_usd, lang)}</strong>
           </p>
         )}
       </section>
 
-      <div className="mt-6 grid gap-4 md:grid-cols-2">
+      <div className="mt-4 grid gap-4 md:grid-cols-2">
         <TariffCard tariff={c.tariff} rank={c.rank} />
         <ExternalLinks links={c.links} name={c.country.name} />
       </div>

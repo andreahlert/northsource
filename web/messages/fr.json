@@ -1,7 +1,10 @@
 {
-  "app": { "name": "northsource", "tagline": "Des fournisseurs hors États-Unis pour ce que le Canada importe" },
+  "app": {
+    "name": "northsource",
+    "tagline": "Des fournisseurs hors États-Unis pour ce que le Canada importe"
+  },
   "home": {
-    "title": "Trouvez des fournisseurs hors États-Unis pour ce que vous importez",
+    "title": "Où d'autre le Canada peut-il s'approvisionner?",
     "subtitle": "Cherchez un produit ou un code SH. Voyez quels pays l'exportent, leur tarif à l'entrée au Canada et s'ils y expédient déjà.",
     "placeholder": "Qu'importez-vous des États-Unis? ex. fromage, bobines d'acier, 8471",
     "featured": "Produits visés par la surtaxe de 25 %",
@@ -9,7 +12,10 @@
     "how2": "Comparez les pays par volume et tarif à l'entrée au Canada",
     "how3": "Accédez aux répertoires de fournisseurs filtrés pour ce produit"
   },
-  "search": { "noResults": "Aucun code SH correspondant", "searching": "Recherche" },
+  "search": {
+    "noResults": "Aucun code SH correspondant",
+    "searching": "Recherche"
+  },
   "result": {
     "metaTitle": "Alternatives aux fournisseurs américains de {name} pour le Canada | SH {hs6}",
     "chapter": "Chapitre {chapter}",
